@@ -9,17 +9,13 @@ st.set_page_config(page_title="oXy AI • By Zayn", page_icon="💧", layout="ce
 # 2. CSS RESET & ULTRA iPHONE GLASS GEN Z STYLING
 st.markdown("""
 <style>
-    /* Latar Belakang Aplikasi Ultra Biru Gelap Cyber */
     .stApp {
         background: linear-gradient(135deg, #02081e 0%, #051642 100%) !important;
         color: #ffffff !important;
     }
-    
-    /* Hilangkan Header & Footer Bawaan Streamlit */
     header[data-testid="stHeader"] { background: transparent !important; }
     footer { visibility: hidden !important; }
 
-    /* MEMBERSIHKAN CONTAINER INPUT BAWAH STREAMLIT */
     div[data-testid="stBottom"],
     div[data-testid="stBottomBlockContainer"],
     div[data-testid="stChatInputContainer"],
@@ -31,7 +27,6 @@ st.markdown("""
         box-shadow: none !important;
     }
     
-    /* KOTAK INPUT UTAMA NEON GLASS EFFECT */
     div[data-testid="stChatInputContainer"] > div {
         border-radius: 30px !important;
         border: 1px solid rgba(255, 255, 255, 0.2) !important;
@@ -48,7 +43,6 @@ st.markdown("""
         background-color: transparent !important;
     }
 
-    /* STRUCTURE ALIGNMENT CHAT (KANAN & KIRI) */
     .chat-container-block {
         display: flex !important;
         flex-direction: column !important;
@@ -58,7 +52,6 @@ st.markdown("""
     .align-user { align-items: flex-end !important; }
     .align-ai { align-items: flex-start !important; }
 
-    /* LABEL DI ATAS BALON CHAT (NAMA + AVATAR EMOJI) */
     .ai-name-tag {
         font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         font-size: 12px !important;
@@ -84,7 +77,6 @@ st.markdown("""
         gap: 6px;
     }
 
-    /* USER BUBBLE: GRADIENT iPHONE STYLE */
     .iphone-user {
         background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%) !important;
         color: #ffffff !important;
@@ -95,7 +87,6 @@ st.markdown("""
         box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4) !important;
     }
 
-    /* AI BUBBLE: LIQUID GLASS DENGAN PENDARAN NEON */
     .iphone-ai {
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
         color: #ffffff !important;
@@ -111,14 +102,12 @@ st.markdown("""
                     inset 0 1px 2px rgba(255, 255, 255, 0.2) !important;
     }
 
-    /* Memperbaiki Pewarnaan Teks di Code Block agar Kontras */
     .iphone-ai code, .iphone-ai pre {
         background-color: rgba(0, 0, 0, 0.5) !important;
         color: #38bdf8 !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* JUDUL GLOW LIQUID EFFECT */
     .liquid-title {
         font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-weight: 800 !important;
@@ -133,7 +122,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. JAVASCRIPT ENGINE (Penjaga Background Transparan di Mobile)
+# 3. JAVASCRIPT ENGINE (Pembersih Latar Putih Mobile)
 components.html("""
 <script>
     function clearWhitePlates() {
@@ -151,7 +140,7 @@ components.html("""
 
 # 4. HEADER UTAMA BRANDING
 st.markdown('<h1 class="liquid-title">💧 oXy AI • By Zayn</h1>', unsafe_allow_html=True)
-st.markdown('<p class="custom-caption">Lab cvAI4 Aktif • Powered by OpenRouter Free Engine</p>', unsafe_allow_html=True)
+st.markdown('<p class="custom-caption">Lab cvAI4 Aktif • Smart Language Engine Enabled</p>', unsafe_allow_html=True)
 
 # Ambil Token OpenRouter dari Secrets
 or_api_key = st.secrets.get("OPENROUTER_API_KEY")
@@ -159,7 +148,7 @@ if not or_api_key:
     st.error("⚠️ Token OPENROUTER_API_KEY tidak ditemukan di menu Secrets Streamlit Anda.")
     st.stop()
 
-# Hubungkan Klien OpenAI ke Server OpenRouter
+# Sambungkan Klien ke OpenRouter
 client = OpenAI(
     base_url="https://openrouter.ai/api/v1",
     api_key=or_api_key
@@ -168,30 +157,42 @@ client = OpenAI(
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 5. RENDER UTAMA HISTORI CHAT DARI MEMORI
+# 5. RENDER UTAMA HISTORI CHAT
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         st.html(f'<div class="chat-container-block align-user"><div class="user-name-tag">Tuan Gigs 👨‍💻</div><div class="iphone-user">{msg["content"]}</div></div>')
-    else:
+    # Jangan render pesan 'system' rahasia di layar aplikasi
+    elif msg["role"] == "assistant":
         st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI • By Zayn</div><div class="iphone-ai">')
         st.markdown(msg["content"])
         st.html('</div></div>')
 
 # INPUT FIELD CHAT UTAMA
 if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
-    # Tampilkan pesan user instan di layar
+    # Tampilkan chat user instan
     st.html(f'<div class="chat-container-block align-user"><div class="user-name-tag">Tuan Gigs 👨‍💻</div><div class="iphone-user">{user_input}</div></div>')
+    
+    # Aturan Bahasa Kustom titipan Tuan Gigs dimasukkan ke baris memori chat
+    if len(st.session_state.messages) == 0:
+        system_instruction = (
+            "You are oXy AI, created by -Oxy-. Rules for language: "
+            "1. Look at the user's very first message. If the first message is in English, reply in English. "
+            "2. If the first message is in Indonesian or any other language, you MUST strictly reply and continue the whole conversation in Indonesian only. "
+            "Act like a cool Gen Z assistant, helpful, smart, and adaptive."
+        )
+        st.session_state.messages.append({"role": "system", "content": system_instruction})
+        
     st.session_state.messages.append({"role": "user", "content": user_input})
     
     try:
-        # Tembak API OpenRouter menggunakan jalur model gratisan otomatis
+        # Kirim seluruh riwayat beserta instruksi bahasa ke OpenRouter
         response = client.chat.completions.create(
             model="openrouter/free",
-            messages=[{"role": "user", "content": user_input}]
+            messages=st.session_state.messages
         )
         full_response = response.choices[0].message.content
         
-        # Munculkan wadah balon chat AI kustom
+        # Munculkan wadah balon chat AI
         st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI • By Zayn</div><div class="iphone-ai">')
         
         # EFEK KETIKAN BERJALAN PREMIUM (STREAMING TEXT EFFECT)
@@ -204,7 +205,7 @@ if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
         placeholder.markdown(full_response)
         st.html('</div></div>')
         
-        # Amankan pesan ke dalam memori session_state
+        # Amankan pesan jawaban ke dalam memori session_state
         st.session_state.messages.append({"role": "assistant", "content": full_response})
         
     except Exception as e:
