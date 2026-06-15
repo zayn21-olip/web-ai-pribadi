@@ -234,8 +234,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. FIX OVERLAY INTERFACE & JAVASCRIPT AUTO-SCROLL
-# Ditambahkan fungsi window.scrollTo agar halaman otomatis meluncur ke bawah
+# 3. FIX OVERLAY INTERFACE & JAVASCRIPT AUTO-SCROLL LOADER
 components.html("""
 <script>
     function fixInputStyle() {
@@ -256,8 +255,8 @@ components.html("""
     }
 
     setInterval(fixInputStyle, 50);
-    // Jalankan auto-scroll ke bawah setiap halaman di-refresh / ada chat masuk
-    setTimeout(scrollToBottom, 300);
+    // Jalankan auto-scroll ke bawah secara berkala agar teks yang sedang streaming tetap terkejar ke bawah
+    setInterval(scrollToBottom, 400);
 </script>
 """, height=0, width=0)
 
@@ -300,7 +299,7 @@ if not st.session_state.sudah_masuk:
     </div>
     """)
 
-# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA (KONEKSI OPENROUTER)
+# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA (METODE STREAMING BERJALAN)
 else:
     st.markdown('<div class="cyber-core-container" style="margin-top:2%;"><div class="cyber-core" style="width:70px; height:70px; box-shadow: 0 0 25px rgba(168,85,247,0.4);"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title" style="font-size: 1.8rem !important;">oXy AI Core</h1>', unsafe_allow_html=True)
@@ -332,6 +331,7 @@ else:
             st.session_state.messages = []
             st.rerun()
 
+    # Tampilkan chat history dari file lokal
     for msg in st.session_state.messages:
         if msg["role"] == "user":
             st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{msg["content"]}</div></div>')
@@ -341,6 +341,7 @@ else:
                 st.markdown(msg["content"])
                 st.html('</div></div></div>')
 
+    # Input chat dari user
     if user_input := st.chat_input("Ask to oXy..."):
         st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{user_input}</div></div>')
         
@@ -356,6 +357,7 @@ else:
             json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             
         try:
+            # 1. Munculkan gelembung berpikir sesaat sebelum data stream masuk
             placeholder_loading = st.empty()
             with placeholder_loading.container():
                 st.html("""
@@ -374,27 +376,35 @@ else:
                 </div>
                 """)
             
-            # Tambahan pemicu JavaScript instan pas loading dinyalakan agar langsung mentok bawah
-            components.html("<script>window.parent.scrollTo({top: window.parent.document.body.scrollHeight, behavior: 'smooth'});</script>", height=0, width=0)
-
-            response = client.chat.completions.create(
+            # 2. Panggil API dengan parameter stream=True
+            response_stream = client.chat.completions.create(
                 model="openrouter/auto", 
                 messages=st.session_state.messages,
-                stream=False
+                stream=True
             )
-            full_response = response.choices[0].message.content
             
+            # 3. Hapus gelembung loading, ganti dengan kontainer streaming teks asli
             placeholder_loading.empty()
             
+            def generate_stream_data():
+                for chunk in response_stream:
+                    if hasattr(chunk, 'choices') and len(chunk.choices) > 0:
+                        delta = chunk.choices[0].delta
+                        if hasattr(delta, 'content') and delta.content:
+                            yield delta.content
+
             with st.container():
                 st.html('<div style="display:flex; justify-content:flex-start;"><div class="cyber-ai-bubble-box"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff; font-size:0.95rem;">oXy AI</div></div><div class="cyber-ai-content-flow">')
-                st.markdown(full_response)
+                # st.write_stream akan mencetak kata demi kata dan JS di atas otomatis mendorong layar ke bawah
+                full_response = st.write_stream(generate_stream_data)
                 st.html('</div></div></div>')
             
+            # Save hasil respon lengkap ke memori dan file arsip json
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             with open(FILE_ARSIP, "w", encoding="utf-8") as f:
                 json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             st.rerun()
+            
         except Exception as e:
             placeholder_loading.empty()
             st.error(f"Gagal mengambil respons OpenRouter: {e}")
