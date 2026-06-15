@@ -3,7 +3,7 @@ import streamlit.components.v1 as components
 from google import genai
 
 # 1. Konfigurasi Halaman & Favicon
-st.set_page_config(page_title="cvAI4 Assistant", page_icon="💧", layout="centered")
+st.set_page_config(page_title="oXy AI • By Zayn", page_icon="💧", layout="centered")
 
 # 2. CSS RESET & ULTRA iPHONE GLASS STYLING
 st.markdown("""
@@ -57,7 +57,7 @@ st.markdown("""
     .align-user { align-items: flex-end !important; }
     .align-ai { align-items: flex-start !important; }
 
-    /* NAMA ASISTEN (SUB-LABEL DI ATAS BALON CHAT AI) */
+    /* NAMA ASISTEN DI ATAS BALON CHAT */
     .ai-name-tag {
         font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         font-size: 11px !important;
@@ -86,7 +86,7 @@ st.markdown("""
         color: #ffffff !important;
         font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         padding: 6px 18px !important;
-        border-radius: 4px 20px 20px 20px !important; /* Disesuaikan agar serasi dengan text tag */
+        border-radius: 4px 20px 20px 20px !important;
         max-width: 90% !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         backdrop-filter: blur(25px) !important;
@@ -101,7 +101,7 @@ st.markdown("""
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
-    /* JUDUL GLOW METALLIC */
+    /* JUDUL GLOW METALLIC BARU */
     .liquid-title {
         font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-weight: 800 !important;
@@ -132,8 +132,8 @@ components.html("""
 </script>
 """, height=0, width=0)
 
-# 4. HEADER UTAMA
-st.markdown('<h1 class="liquid-title">💧 cvAI4 Assistant • By Zayn</h1>', unsafe_allow_html=True)
+# 4. HEADER UTAMA (SUDAH DIGANTI MENJADI oXy AI • By Zayn)
+st.markdown('<h1 class="liquid-title">💧 oXy AI • By Zayn</h1>', unsafe_allow_html=True)
 st.markdown('<p class="custom-caption">Lab cvAI4 Aktif • Created by -Oxy-</p>', unsafe_allow_html=True)
 
 # API Setup
@@ -147,12 +147,11 @@ client = genai.Client(api_key=api_key)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 5. RENDER CHAT DENGAN TAG NAMA KUSTOM
+# 5. RENDER HISTORI CHAT
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         st.html(f'<div class="chat-container-block align-user"><div class="iphone-user">{msg["content"]}</div></div>')
     else:
-        # Menambahkan tag nama di atas balon AI
         st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">oXy AI • By Zayn</div><div class="iphone-ai">')
         st.markdown(msg["content"])
         st.html('</div></div>')
@@ -165,7 +164,6 @@ if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
     try:
         response = client.models.generate_content(model='gemini-2.5-flash', contents=user_input)
         
-        # Menambahkan tag nama untuk respons baru
         st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">oXy AI • By Zayn</div><div class="iphone-ai">')
         st.markdown(response.text)
         st.html('</div></div>')
