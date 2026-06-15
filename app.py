@@ -210,7 +210,7 @@ st.markdown("""
         border-radius: 16px !important;
     }
 
-    /* 🟢 ANIMASI GELEMBUNG PEMIKIR (GEMINI TYPING EFFECT) */
+    /* 🟢 ANIMASI GELEMBUNG PEMIKIR */
     .typing-indicator {
         display: flex;
         align-items: center;
@@ -234,7 +234,8 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. FIX OVERLAY INTERFACE JAVASCRIPT
+# 3. FIX OVERLAY INTERFACE & JAVASCRIPT AUTO-SCROLL
+# Ditambahkan fungsi window.scrollTo agar halaman otomatis meluncur ke bawah
 components.html("""
 <script>
     function fixInputStyle() {
@@ -246,7 +247,17 @@ components.html("""
             el.style.setProperty('border', 'none', 'important');
         });
     }
+    
+    function scrollToBottom() {
+        window.parent.scrollTo({
+            top: window.parent.document.body.scrollHeight,
+            behavior: 'smooth'
+        });
+    }
+
     setInterval(fixInputStyle, 50);
+    // Jalankan auto-scroll ke bawah setiap halaman di-refresh / ada chat masuk
+    setTimeout(scrollToBottom, 300);
 </script>
 """, height=0, width=0)
 
@@ -295,7 +306,6 @@ else:
     st.markdown('<h1 class="oxy-title" style="font-size: 1.8rem !important;">oXy AI Core</h1>', unsafe_allow_html=True)
     st.markdown('<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Powered by OpenRouter • Lab Active</p>', unsafe_allow_html=True)
 
-    # Membaca token OpenRouter dari secrets
     openrouter_key = st.secrets.get("OPENROUTER_API_KEY")
     if not openrouter_key:
         st.error("⚠️ Token OPENROUTER_API_KEY tidak ditemukan di dashboard Streamlit Secrets.")
@@ -322,7 +332,6 @@ else:
             st.session_state.messages = []
             st.rerun()
 
-    # Perulangan menampilkan chat history
     for msg in st.session_state.messages:
         if msg["role"] == "user":
             st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{msg["content"]}</div></div>')
@@ -347,7 +356,6 @@ else:
             json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             
         try:
-            # 🟢 PROSES PENAMPILAN GELEMBUNG LOADING MENGETIK KUSTOM
             placeholder_loading = st.empty()
             with placeholder_loading.container():
                 st.html("""
@@ -366,7 +374,9 @@ else:
                 </div>
                 """)
             
-            # Request ke API dilakukan saat gelembung mengetik di atas menyala
+            # Tambahan pemicu JavaScript instan pas loading dinyalakan agar langsung mentok bawah
+            components.html("<script>window.parent.scrollTo({top: window.parent.document.body.scrollHeight, behavior: 'smooth'});</script>", height=0, width=0)
+
             response = client.chat.completions.create(
                 model="openrouter/auto", 
                 messages=st.session_state.messages,
@@ -374,7 +384,6 @@ else:
             )
             full_response = response.choices[0].message.content
             
-            # Hapus gelembung loading, ganti dengan teks asli jawaban AI
             placeholder_loading.empty()
             
             with st.container():
@@ -389,3 +398,4 @@ else:
         except Exception as e:
             placeholder_loading.empty()
             st.error(f"Gagal mengambil respons OpenRouter: {e}")
+    
