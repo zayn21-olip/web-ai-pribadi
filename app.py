@@ -217,14 +217,12 @@ components.html("""
 if "sudah_masuk" not in st.session_state:
     st.session_state.sudah_masuk = False
 
-# 🏠 HALAMAN 1: WELCOME SCREEN (Sesuai Struktur Gambar + Penjelasan Tambahan)
+# 🏠 HALAMAN 1: WELCOME SCREEN
 if not st.session_state.sudah_masuk:
-    # Orb Berputar di atas
     st.markdown('<div class="cyber-core-container"><div class="cyber-core"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title">oXy AI</h1>', unsafe_allow_html=True)
     st.markdown('<p class="oxy-sub">Apa yang bisa saya bantu?</p>', unsafe_allow_html=True)
     
-    # KARTU UTAMA
     st.html("""
     <div class="welcome-card-cyber">
         <div class="welcome-h1">Halo, Saya oXy</div>
@@ -234,14 +232,12 @@ if not st.session_state.sudah_masuk:
     </div>
     """)
     
-    # Tombol Aksi
     _, col_btn, _ = st.columns([1, 2, 1])
     with col_btn:
         if st.button("Lihat Proyek Saya 🔮", key="enter_cyber_btn", use_container_width=True):
             st.session_state.sudah_masuk = True
             st.rerun()
             
-    # 🏷️ SEKSI BAWAH: "Tentang Saya" + Lingkaran Profil + Penjelasan Detail oXy AI
     st.html("""
     <div class="about-section-container">
         <div class="about-title">Tentang Saya</div>
@@ -253,24 +249,22 @@ if not st.session_state.sudah_masuk:
         <p class="about-text-p">
             <span class="about-highlight">oXy AI</span> adalah entitas sistem kecerdasan buatan siber mutakhir yang dirancang khusus oleh <span class="about-highlight">Zayn</span> untuk membantu mempercepat alur kerja pengembangan perangkat lunak, perakitan skrip kode, dan manajemen logika komputasi secara cerdas.
         </p>
-        <p class="about-text-p" style="font-size: 0.95rem; color: #64748b;">
-            Beroperasi di dalam ekosistem Lab Core aktif untuk menyajikan solusi optimal bagi Tuan Gigs.
-        </p>
     </div>
     """)
 
-# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA
+# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA (KONEKSI DEEPSEEK)
 else:
     st.markdown('<div class="cyber-core-container" style="margin-top:2%;"><div class="cyber-core" style="width:70px; height:70px; box-shadow: 0 0 25px rgba(168,85,247,0.4);"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title" style="font-size: 1.8rem !important;">oXy AI Core</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Created by Zayn • Lab Active</p>', unsafe_allow_html=True)
+    st.markdown('<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Powered by DeepSeek • Lab Active</p>', unsafe_allow_html=True)
 
-    or_api_key = st.secrets.get("OPENROUTER_API_KEY")
-    if not or_api_key:
-        st.error("⚠️ Token OPENROUTER_API_KEY tidak ditemukan.")
+    # Membaca token DeepSeek dari secrets secara otomatis
+    deepseek_key = st.secrets.get("DEEPSEEK_API_KEY")
+    if not deepseek_key:
+        st.error("⚠️ Token DEEPSEEK_API_KEY belum dikonfigurasi di dashboard Streamlit Secrets.")
         st.stop()
 
-    client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=or_api_key)
+    client = OpenAI(base_url="https://api.deepseek.com", api_key=deepseek_key)
     FILE_ARSIP = "arsip_chat.json"
 
     if "messages" not in st.session_state:
@@ -281,7 +275,6 @@ else:
         else:
             st.session_state.messages = []
 
-    # Tombol Reset Sesi
     col_reset, _ = st.columns([2, 2])
     with col_reset:
         if st.button("🗑️ Kosongkan Sesi oXy", key="cyber_reset"):
@@ -289,7 +282,6 @@ else:
             st.session_state.messages = []
             st.rerun()
 
-    # Tampilkan Histori Aliran Obrolan
     for msg in st.session_state.messages:
         if msg["role"] == "user":
             st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{msg["content"]}</div></div>')
@@ -298,7 +290,6 @@ else:
             st.markdown(msg["content"])
             st.html('</div></div>')
 
-    # Input Box Chat Kapsul
     if user_input := st.chat_input("Ask to oXy..."):
         st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{user_input}</div></div>')
         
@@ -314,7 +305,11 @@ else:
             json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             
         try:
-            response = client.chat.completions.create(model="openrouter/free", messages=st.session_state.messages)
+            response = client.chat.completions.create(
+                model="deepseek-chat", 
+                messages=st.session_state.messages,
+                stream=False
+            )
             full_response = response.choices[0].message.content
             
             st.html('<div style="margin-bottom:24px;"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff;">oXy AI</div></div><div class="cyber-ai-content-flow">')
@@ -326,5 +321,5 @@ else:
                 json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             st.rerun()
         except Exception as e:
-            st.error(f"Gagal mengambil respons core: {e}")
-        
+            st.error(f"Gagal mengambil respons DeepSeek Core: {e}")
+    
