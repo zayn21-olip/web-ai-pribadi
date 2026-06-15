@@ -2,6 +2,8 @@ import streamlit as st
 import streamlit.components.v1 as components
 from openai import OpenAI
 import time
+import os
+import json
 
 # 1. Konfigurasi Halaman & Favicon
 st.set_page_config(page_title="oXy AI • By Zayn", page_icon="💧", layout="centered")
@@ -122,7 +124,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. JAVASCRIPT ENGINE (Pembersih Latar Putih Mobile)
+# 3. JAVASCRIPT ENGINE (Pembersih Background)
 components.html("""
 <script>
     function clearWhitePlates() {
@@ -140,7 +142,7 @@ components.html("""
 
 # 4. HEADER UTAMA BRANDING
 st.markdown('<h1 class="liquid-title">💧 oXy AI • By Zayn</h1>', unsafe_allow_html=True)
-st.markdown('<p class="custom-caption">Lab cvAI4 Aktif • Smart Language Engine Enabled</p>', unsafe_allow_html=True)
+st.markdown('<p class="custom-caption">Lab cvAI4 Aktif • Persistent Archive Memory Enabled</p>', unsafe_allow_html=True)
 
 # Ambil Token OpenRouter dari Secrets
 or_api_key = st.secrets.get("OPENROUTER_API_KEY")
@@ -154,14 +156,40 @@ client = OpenAI(
     api_key=or_api_key
 )
 
-if "messages" not in st.session_state:
-    st.session_state.messages = []
+# ==================== SISTEM ARSIP MEMORI FILE Teks ====================
+FILE_ARSIP = "arsip_chat.json"
 
-# 5. RENDER UTAMA HISTORI CHAT
+# Fungsi membaca riwayat chat dari file JSON lokal
+def muat_arsip_chat():
+    if os.path.exists(FILE_ARSIP):
+        try:
+            with open(FILE_ARSIP, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except:
+            return []
+    return []
+
+# Fungsi menulis riwayat chat ke file JSON lokal
+def simpan_ke_arsip(pesan_list):
+    with open(FILE_ARSIP, "w", encoding="utf-8") as f:
+        json.dump(pesan_list, f, ensure_ascii=False, indent=4)
+# ======================================================================
+
+# Inisialisasi memori session dari arsip file teks terlebih dahulu
+if "messages" not in st.session_state:
+    st.session_state.messages = muat_arsip_chat()
+
+# Tombol Reset Chat di Pojok Kanan Atas (Opsional biar bisa hapus arsip)
+if st.button("🗑️ Reset & Hapus Semua Arsip Chat"):
+    if os.path.exists(FILE_ARSIP):
+        os.remove(FILE_ARSIP)
+    st.session_state.messages = []
+    st.rerun()
+
+# 5. RENDER UTAMA HISTORI CHAT YANG TERSIMPAN
 for msg in st.session_state.messages:
     if msg["role"] == "user":
         st.html(f'<div class="chat-container-block align-user"><div class="user-name-tag">Tuan Gigs 👨‍💻</div><div class="iphone-user">{msg["content"]}</div></div>')
-    # Jangan render pesan 'system' rahasia di layar aplikasi
     elif msg["role"] == "assistant":
         st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI • By Zayn</div><div class="iphone-ai">')
         st.markdown(msg["content"])
@@ -183,19 +211,20 @@ if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
         st.session_state.messages.append({"role": "system", "content": system_instruction})
         
     st.session_state.messages.append({"role": "user", "content": user_input})
+    simpan_ke_arsip(st.session_state.messages) # Simpan pesan user ke file lokal
     
     try:
         # Kirim seluruh riwayat beserta instruksi bahasa ke OpenRouter
         response = client.chat.completions.create(
             model="openrouter/free",
-            messages=st.session_state.messages
+            messages=[m for m in st.session_state.messages if m["role"] != "system"] # Kirim riwayat bersih
         )
         full_response = response.choices[0].message.content
         
         # Munculkan wadah balon chat AI
         st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI • By Zayn</div><div class="iphone-ai">')
         
-        # EFEK KETIKAN BERJALAN PREMIUM (STREAMING TEXT EFFECT)
+        # EFEK KETIKAN BERJALAN PREMIUM
         placeholder = st.empty()
         displayed_text = ""
         for word in full_response.split(" "):
@@ -205,8 +234,9 @@ if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
         placeholder.markdown(full_response)
         st.html('</div></div>')
         
-        # Amankan pesan jawaban ke dalam memori session_state
+        # Amankan pesan jawaban ke dalam memori RAM & File JSON Permanen
         st.session_state.messages.append({"role": "assistant", "content": full_response})
+        simpan_ke_arsip(st.session_state.messages) # Kunci riwayat ke arsip lokal
         
     except Exception as e:
         st.error(f"Waduh Tuan, ada kendala pada server OpenRouter: {e}")
