@@ -8,7 +8,7 @@ import json
 # 1. Konfigurasi Halaman & Favicon
 st.set_page_config(page_title="oXy AI • By Zayn", page_icon="💧", layout="centered")
 
-# 2. CSS RESET, ULTRA iPHONE GLASS & ANIMASI GEMINI WAVE LOADING
+# 2. CSS RESET, KHUSUS TOMBOL TEKS HITAM, & NEON GEMINI WAVE LOADING
 st.markdown("""
 <style>
     .stApp {
@@ -17,6 +17,20 @@ st.markdown("""
     }
     header[data-testid="stHeader"] { background: transparent !important; }
     footer { visibility: hidden !important; }
+
+    /* 🎯 FIX TOMBOL RESET: PAKSA TEKS WARNA HITAM PEKAT */
+    div[data-testid="stColumn"] button {
+        color: #000000 !important;
+        font-weight: 700 !important;
+        background-color: #ffffff !important;
+        border: 1px solid #ffffff !important;
+        border-radius: 12px !important;
+    }
+    
+    div[data-testid="stColumn"] button p {
+        color: #000000 !important;
+        font-weight: 700 !important;
+    }
 
     /* MEMBERSIHKAN CONTAINER INPUT BAWAH STREAMLIT */
     div[data-testid="stBottom"],
@@ -36,8 +50,7 @@ st.markdown("""
         background: rgba(255, 255, 255, 0.08) !important;
         backdrop-filter: blur(20px) !important;
         -webkit-backdrop-filter: blur(20px) !important;
-        box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.3), 
-                    inset 0 1px 1px 0 rgba(255, 255, 255, 0.2) !important;
+        box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.3) !important;
         padding: 4px !important;
     }
     
@@ -74,6 +87,7 @@ st.markdown("""
         margin-bottom: 6px !important;
     }
 
+    /* 💧 KEMBALI KE ORIGINAL BALON CHAT USER (TEKS PUTIH ESTETIK) */
     .iphone-user {
         background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%) !important;
         color: #ffffff !important;
@@ -83,12 +97,14 @@ st.markdown("""
         max-width: 80% !important;
         box-shadow: 0 4px 15px rgba(0, 114, 255, 0.4) !important;
     }
+    .iphone-user p, .iphone-user span { color: #ffffff !important; }
 
+    /* 💧 KEMBALI KE ORIGINAL BALON CHAT AI GLASS EFFECT (TEKS PUTIH ESTETIK) */
     .iphone-ai {
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
         color: #ffffff !important;
         font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
-        padding: 10px 20px !important;
+        padding: 12px 20px !important;
         border-radius: 4px 20px 20px 20px !important;
         max-width: 90% !important;
         border: 1px solid rgba(56, 189, 248, 0.25) !important;
@@ -96,6 +112,15 @@ st.markdown("""
         -webkit-backdrop-filter: blur(25px) !important;
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
                     inset 0 1px 2px rgba(255, 255, 255, 0.2) !important;
+    }
+    .iphone-ai p, .iphone-ai span, .iphone-ai li, .iphone-ai h1, .iphone-ai h2, .iphone-ai h3 { 
+        color: #ffffff !important; 
+    }
+
+    .iphone-ai code, .iphone-ai pre {
+        background-color: rgba(0, 0, 0, 0.5) !important;
+        color: #38bdf8 !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
     }
 
     .liquid-title {
@@ -108,24 +133,25 @@ st.markdown("""
     }
     .custom-caption { color: #7dd3fc !important; font-weight: 500; margin-bottom: 25px; }
 
-    /* 🔥 ANIMASI LOADING GELOMBANG GEMINI (WAVE SKELETON) */
+    /* 🌊 ANIMASI LOADING GELOMBANG GEMINI CYAN MINT GLOW */
     .gemini-loading-box {
         display: flex;
         flex-direction: column;
         gap: 8px;
         width: 100%;
-        padding: 4px;
+        padding: 6px 4px;
     }
     .gemini-wave {
         height: 12px;
-        background: linear-gradient(90deg, rgba(56,189,248,0.1) 25%, rgba(167,243,208,0.4) 50%, rgba(56,189,248,0.1) 75%);
+        background: linear-gradient(90deg, #38bdf8 25%, #a7f3d0 50%, #38bdf8 75%);
         background-size: 200% 100%;
-        animation: geminiWaveAnim 1.4s infinite linear;
+        animation: geminiWaveAnim 1.2s infinite linear;
         border-radius: 6px;
+        box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
     }
-    .w-1 { width: 40%; }
+    .w-1 { width: 45%; }
     .w-2 { width: 85%; }
-    .w-3 { width: 65%; }
+    .w-3 { width: 60%; }
 
     @keyframes geminiWaveAnim {
         0% { background-position: 200% 0; }
@@ -134,7 +160,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. JAVASCRIPT ENGINE (Pembersih Latar Belakang Otomatis)
+# 3. JAVASCRIPT ENGINE (Pembersih Latar Belakang)
 components.html("""
 <script>
     function clearWhitePlates() {
@@ -154,7 +180,6 @@ components.html("""
 st.markdown('<h1 class="liquid-title">💧 oXy AI • By Zayn</h1>', unsafe_allow_html=True)
 st.markdown('<p class="custom-caption">Lab cvAI4 Aktif • Persistent Archive Memory Enabled</p>', unsafe_allow_html=True)
 
-# Ambil Token OpenRouter dari Secrets
 or_api_key = st.secrets.get("OPENROUTER_API_KEY")
 if not or_api_key:
     st.error("⚠️ Token OPENROUTER_API_KEY tidak ditemukan di menu Secrets Streamlit Anda.")
@@ -182,11 +207,10 @@ def simpan_ke_arsip(pesan_list):
 if "messages" not in st.session_state:
     st.session_state.messages = muat_arsip_chat()
 
-# ✨ PERBAIKAN TOMBOL RESET KUSTOM (Anti Ketutup Putih)
+# TOMBOL RESET KUSTOM (Ditembak pakai CSS khusus teks hitam)
 col_reset, _ = st.columns([2, 2])
 with col_reset:
-    # Menggunakan tombol kustom native Streamlit dengan helper key agar ter-style terpisah
-    if st.button("🗑️ Reset & Hapus Semua Arsip", key="custom_reset_btn", use_container_width=False):
+    if st.button("🗑️ Reset & Hapus Semua Arsip", key="custom_reset_btn"):
         if os.path.exists(FILE_ARSIP):
             os.remove(FILE_ARSIP)
         st.session_state.messages = []
@@ -217,8 +241,8 @@ if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
     st.session_state.messages.append({"role": "user", "content": user_input})
     simpan_ke_arsip(st.session_state.messages)
     
-    # 🌊 TAMPILKAN EFEK ANIMASI GELOMBANG GEMINI SEBELUM TEMBAK API
-    st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI Memikirkan Jawaban...</div><div class="iphone-ai">')
+    # LOADING GELOMBANG GEMINI GLOWING
+    st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI Memikirkan Jawaban...</div><div class="iphone-ai" style="background: rgba(255,255,255,0.1) !important;">')
     loading_placeholder = st.empty()
     loading_placeholder.html("""
         <div class="gemini-loading-box">
@@ -230,17 +254,14 @@ if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
     st.html('</div></div>')
     
     try:
-        # Jalankan penembakan server OpenRouter
         response = client.chat.completions.create(
             model="openrouter/free",
             messages=[m for m in st.session_state.messages if m["role"] != "system"]
         )
         full_response = response.choices[0].message.content
         
-        # Hapus/Bersihkan animasi loading ombak setelah jawaban didapatkan
         loading_placeholder.empty()
         
-        # Render jawaban asli dengan efek ketikan berjalan premium
         st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI • By Zayn</div><div class="iphone-ai">')
         placeholder = st.empty()
         displayed_text = ""
@@ -253,7 +274,7 @@ if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
         
         st.session_state.messages.append({"role": "assistant", "content": full_response})
         simpan_ke_arsip(st.session_state.messages)
-        st.rerun() # Refresh agar posisi layout balon chat kembali rapi setelah loading dihapus
+        st.rerun()
         
     except Exception as e:
         loading_placeholder.empty()
