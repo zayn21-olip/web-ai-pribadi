@@ -209,6 +209,28 @@ st.markdown("""
         border: 1px solid rgba(168, 85, 247, 0.35) !important;
         border-radius: 16px !important;
     }
+
+    /* 🟢 ANIMASI GELEMBUNG PEMIKIR (GEMINI TYPING EFFECT) */
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        padding: 5px 10px;
+    }
+    .typing-dot {
+        width: 8px;
+        height: 8px;
+        background-color: #a855f7;
+        border-radius: 50%;
+        animation: cyberBlink 1.4s infinite both;
+    }
+    .typing-dot:nth-child(2) { animation-delay: .2s; background-color: #c084fc; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; background-color: #d8b4fe; }
+
+    @keyframes cyberBlink {
+        0%, 100% { transform: scale(0.8); opacity: 0.4; }
+        50% { transform: scale(1.2); opacity: 1; }
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -305,7 +327,6 @@ else:
         if msg["role"] == "user":
             st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{msg["content"]}</div></div>')
         elif msg["role"] == "assistant":
-            # Perbaikan bungkus elemen div agar teks masuk ke dalam kelas gelembung oXy AI
             with st.container():
                 st.html('<div style="display:flex; justify-content:flex-start;"><div class="cyber-ai-bubble-box"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff; font-size:0.95rem;">oXy AI</div></div><div class="cyber-ai-content-flow">')
                 st.markdown(msg["content"])
@@ -326,6 +347,26 @@ else:
             json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             
         try:
+            # 🟢 PROSES PENAMPILAN GELEMBUNG LOADING MENGETIK KUSTOM
+            placeholder_loading = st.empty()
+            with placeholder_loading.container():
+                st.html("""
+                <div style="display:flex; justify-content:flex-start;">
+                    <div class="cyber-ai-bubble-box" style="margin-bottom:10px;">
+                        <div class="ai-header-inline">
+                            <div class="ai-mini-orb"></div>
+                            <div style="font-weight:700; color:#fff; font-size:0.95rem;">oXy AI berpikir...</div>
+                        </div>
+                        <div class="typing-indicator">
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                            <div class="typing-dot"></div>
+                        </div>
+                    </div>
+                </div>
+                """)
+            
+            # Request ke API dilakukan saat gelembung mengetik di atas menyala
             response = client.chat.completions.create(
                 model="openrouter/auto", 
                 messages=st.session_state.messages,
@@ -333,7 +374,9 @@ else:
             )
             full_response = response.choices[0].message.content
             
-            # Perbaikan bungkus elemen div untuk respons instan
+            # Hapus gelembung loading, ganti dengan teks asli jawaban AI
+            placeholder_loading.empty()
+            
             with st.container():
                 st.html('<div style="display:flex; justify-content:flex-start;"><div class="cyber-ai-bubble-box"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff; font-size:0.95rem;">oXy AI</div></div><div class="cyber-ai-content-flow">')
                 st.markdown(full_response)
@@ -344,4 +387,5 @@ else:
                 json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             st.rerun()
         except Exception as e:
+            placeholder_loading.empty()
             st.error(f"Gagal mengambil respons OpenRouter: {e}")
