@@ -11,7 +11,7 @@ st.set_page_config(page_title="oXy AI • Core", page_icon="🔮", layout="cente
 # 2. INJEKSI CSS STRUKTUR: DEEP PURPLE CYBER INTERFACE
 st.markdown("""
 <style>
-    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;800&display=swap');
     
     * {
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
@@ -166,7 +166,7 @@ st.markdown("""
         font-weight: 600;
     }
 
-    /* CHAT CORE LAYOUT & INPUT */
+    /* CHAT CORE LAYOUT & GELEMBUNG INPUT */
     div[data-testid="stChatInputContainer"] > div {
         border-radius: 30px !important;
         border: 1px solid rgba(168, 85, 247, 0.35) !important;
@@ -174,21 +174,36 @@ st.markdown("""
         backdrop-filter: blur(20px) !important;
         padding: 6px 14px !important;
     }
+    
+    /* 💬 Gelembung User */
     .cyber-user-bubble {
         background: rgba(43, 29, 74, 0.4) !important;
         color: #f1f0f5 !important;
         padding: 13px 22px !important;
-        border-radius: 20px !important;
+        border-radius: 20px 20px 4px 20px !important;
         border: 1px solid rgba(168, 85, 247, 0.25) !important;
         max-width: 85% !important;
     }
-    .ai-header-inline { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    
+    /* 🔮 Gelembung AI (oXy AI Bubble Container) */
+    .cyber-ai-bubble-box {
+        background: rgba(25, 18, 46, 0.5) !important;
+        border: 1px solid rgba(168, 85, 247, 0.2) !important;
+        border-radius: 4px 20px 20px 20px !important;
+        padding: 18px 22px !important;
+        margin-bottom: 25px !important;
+        max-width: 85% !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .ai-header-inline { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
     .ai-mini-orb {
-        width: 20px; height: 20px; border-radius: 50%;
+        width: 18px; height: 18px; border-radius: 50%;
         background: radial-gradient(circle, #c084fc 0%, #6b21a8 70%);
         border: 1px solid rgba(168, 85, 247, 0.5);
     }
-    .cyber-ai-content-flow { width: 100% !important; padding-left: 32px !important; color: #dbd5ea !important; line-height: 1.7 !important; }
+    .cyber-ai-content-flow { color: #dbd5ea !important; line-height: 1.7 !important; }
+    
     div[data-testid="stMarkdownContainer"] pre {
         background-color: #06040a !important;
         border: 1px solid rgba(168, 85, 247, 0.35) !important;
@@ -285,13 +300,16 @@ else:
             st.session_state.messages = []
             st.rerun()
 
+    # Perulangan menampilkan chat history
     for msg in st.session_state.messages:
         if msg["role"] == "user":
             st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{msg["content"]}</div></div>')
         elif msg["role"] == "assistant":
-            st.html('<div style="margin-bottom:24px;"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff;">oXy AI</div></div><div class="cyber-ai-content-flow">')
-            st.markdown(msg["content"])
-            st.html('</div></div>')
+            # Perbaikan bungkus elemen div agar teks masuk ke dalam kelas gelembung oXy AI
+            with st.container():
+                st.html('<div style="display:flex; justify-content:flex-start;"><div class="cyber-ai-bubble-box"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff; font-size:0.95rem;">oXy AI</div></div><div class="cyber-ai-content-flow">')
+                st.markdown(msg["content"])
+                st.html('</div></div></div>')
 
     if user_input := st.chat_input("Ask to oXy..."):
         st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{user_input}</div></div>')
@@ -308,7 +326,6 @@ else:
             json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             
         try:
-            # Menggunakan model gratis bawaan OpenRouter (bisa diganti sesuai model free pilihan Tuan)
             response = client.chat.completions.create(
                 model="openrouter/auto", 
                 messages=st.session_state.messages,
@@ -316,9 +333,11 @@ else:
             )
             full_response = response.choices[0].message.content
             
-            st.html('<div style="margin-bottom:24px;"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff;">oXy AI</div></div><div class="cyber-ai-content-flow">')
-            st.markdown(full_response)
-            st.html('</div></div>')
+            # Perbaikan bungkus elemen div untuk respons instan
+            with st.container():
+                st.html('<div style="display:flex; justify-content:flex-start;"><div class="cyber-ai-bubble-box"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff; font-size:0.95rem;">oXy AI</div></div><div class="cyber-ai-content-flow">')
+                st.markdown(full_response)
+                st.html('</div></div></div>')
             
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             with open(FILE_ARSIP, "w", encoding="utf-8") as f:
@@ -326,4 +345,3 @@ else:
             st.rerun()
         except Exception as e:
             st.error(f"Gagal mengambil respons OpenRouter: {e}")
-        
