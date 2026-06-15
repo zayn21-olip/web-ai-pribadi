@@ -255,7 +255,6 @@ components.html("""
     }
 
     setInterval(fixInputStyle, 50);
-    // Jalankan auto-scroll ke bawah secara berkala agar teks yang sedang streaming tetap terkejar ke bawah
     setInterval(scrollToBottom, 400);
 </script>
 """, height=0, width=0)
@@ -264,7 +263,7 @@ components.html("""
 if "sudah_masuk" not in st.session_state:
     st.session_state.sudah_masuk = False
 
-# 🏠 HALAMAN 1: WELCOME SCREEN
+# 🏠 HALAMAN 1: WELCOME SCREEN (NAMA DIKUNCI KE DARDCOR)
 if not st.session_state.sudah_masuk:
     st.markdown('<div class="cyber-core-container"><div class="cyber-core"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title">oXy AI</h1>', unsafe_allow_html=True)
@@ -272,7 +271,7 @@ if not st.session_state.sudah_masuk:
     
     st.html("""
     <div class="welcome-card-cyber">
-        <div class="welcome-h1">Halo, Saya oXy</div>
+        <div class="welcome-h1">Halo, Saya Dardcor</div>
         <div class="welcome-p">
             Seorang <strong>Pengembang Perangkat Lunak</strong> yang bersemangat menciptakan solusi inovatif.
         </div>
@@ -289,17 +288,17 @@ if not st.session_state.sudah_masuk:
     <div class="about-section-container">
         <div class="about-title">Tentang Saya</div>
         <div class="about-profile-circle">
-            <div class="about-profile-text">oXy Core</div>
+            <div class="about-profile-text">Dardcor Profile</div>
         </div>
     </div>
     <div class="about-description-box">
         <p class="about-text-p">
-            <span class="about-highlight">oXy AI</span> adalah entitas sistem kecerdasan buatan siber mutakhir yang dirancang khusus oleh <span class="about-highlight">Zayn</span> untuk membantu mempercepat alur kerja pengembangan perangkat lunak, perakitan skrip kode, dan manajemen logika komputasi secara cerdas.
+            <span class="about-highlight">oXy AI</span> adalah entitas sistem kecerdasan buatan siber mutakhir yang dirancang khusus oleh <span class="about-highlight">Dardcor</span> untuk membantu mempercepat alur kerja pengembangan perangkat lunak, perakitan skrip kode, dan manajemen logika komputasi secara cerdas.
         </p>
     </div>
     """)
 
-# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA (METODE STREAMING BERJALAN)
+# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA
 else:
     st.markdown('<div class="cyber-core-container" style="margin-top:2%;"><div class="cyber-core" style="width:70px; height:70px; box-shadow: 0 0 25px rgba(168,85,247,0.4);"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title" style="font-size: 1.8rem !important;">oXy AI Core</h1>', unsafe_allow_html=True)
@@ -331,7 +330,6 @@ else:
             st.session_state.messages = []
             st.rerun()
 
-    # Tampilkan chat history dari file lokal
     for msg in st.session_state.messages:
         if msg["role"] == "user":
             st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{msg["content"]}</div></div>')
@@ -341,14 +339,13 @@ else:
                 st.markdown(msg["content"])
                 st.html('</div></div></div>')
 
-    # Input chat dari user
     if user_input := st.chat_input("Ask to oXy..."):
         st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{user_input}</div></div>')
         
         if len(st.session_state.messages) == 0:
             st.session_state.messages.append({
                 "role": "system", 
-                "content": "You are oXy AI, a highly advanced artificial intelligence developed by Zayn. Always assist Tuan Gigs professionally and use code blocks when delivering scripts."
+                "content": "You are oXy AI, a highly advanced artificial intelligence developed by Dardcor. Always assist Tuan Gigs professionally and use code blocks when delivering scripts."
             })
             
         st.session_state.messages.append({"role": "user", "content": user_input})
@@ -357,7 +354,6 @@ else:
             json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             
         try:
-            # 1. Munculkan gelembung berpikir sesaat sebelum data stream masuk
             placeholder_loading = st.empty()
             with placeholder_loading.container():
                 st.html("""
@@ -376,14 +372,12 @@ else:
                 </div>
                 """)
             
-            # 2. Panggil API dengan parameter stream=True
             response_stream = client.chat.completions.create(
                 model="openrouter/auto", 
                 messages=st.session_state.messages,
                 stream=True
             )
             
-            # 3. Hapus gelembung loading, ganti dengan kontainer streaming teks asli
             placeholder_loading.empty()
             
             def generate_stream_data():
@@ -395,11 +389,9 @@ else:
 
             with st.container():
                 st.html('<div style="display:flex; justify-content:flex-start;"><div class="cyber-ai-bubble-box"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff; font-size:0.95rem;">oXy AI</div></div><div class="cyber-ai-content-flow">')
-                # st.write_stream akan mencetak kata demi kata dan JS di atas otomatis mendorong layar ke bawah
                 full_response = st.write_stream(generate_stream_data)
                 st.html('</div></div></div>')
             
-            # Save hasil respon lengkap ke memori dan file arsip json
             st.session_state.messages.append({"role": "assistant", "content": full_response})
             with open(FILE_ARSIP, "w", encoding="utf-8") as f:
                 json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
@@ -407,5 +399,9 @@ else:
             
         except Exception as e:
             placeholder_loading.empty()
-            st.error(f"Gagal mengambil respons OpenRouter: {e}")
+            # Jika error balance habis muncul, berikan pesan pemberitahuan yang rapi
+            if "402" in str(e) or "Balance" in str(e):
+                st.error("⚠️ oXy AI Core mendeteksi Saldo OpenRouter Anda habis (Error 402 Insufficient Balance). Silakan lakukan top-up kredit di dashboard OpenRouter Anda agar AI bisa berpikir kembali!")
+            else:
+                st.error(f"Gagal mengambil respons OpenRouter: {e}")
     
