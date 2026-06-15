@@ -2,84 +2,106 @@ import streamlit as st
 import streamlit.components.v1 as components
 from google import genai
 
-# 1. Konfigurasi Halaman & Favicon
+# 1. Konfigurasi Halaman & Favicon Ikon Tetesan Air
 st.set_page_config(page_title="cvAI4 Assistant", page_icon="💧", layout="centered")
 
-# 2. CSS UTAMA & STYLING BALON CHAT (Aman dari Reset)
+# 2. CSS UTAMA: MEMBERSIHKAN ELEMEN BAWAAN & BACKGROUND ULTRA BIRU HD
 st.markdown("""
 <style>
-    /* Latar Belakang Aplikasi Ultra Biru HD */
+    /* Mengubah warna latar belakang global aplikasi */
     .stApp {
         background: linear-gradient(135deg, #02081e 0%, #051642 100%) !important;
         color: #ffffff !important;
     }
     
-    /* Menghilangkan Header Default */
+    /* Menghilangkan Header & Footer Default Streamlit */
     header[data-testid="stHeader"] { background: transparent !important; }
     footer { visibility: hidden !important; }
 
-    /* RESTRUKTURISASI CONTAINER CHAT AGAR BISA KANAN-KIRI */
-    div[data-testid="stChatMessage"] {
+    /* MENGHANCURKAN TOTAL WARNA PUTIH DI CONTAINER BAWAH */
+    div[data-testid="stBottom"],
+    div[data-testid="stBottomBlockContainer"],
+    div[data-testid="stChatInputContainer"],
+    .stChatInput,
+    form {
         background-color: transparent !important;
+        background: transparent !important;
         border: none !important;
-        padding: 5px 0px !important;
-        width: 100% !important;
-        display: flex !important;
+        box-shadow: none !important;
     }
     
-    /* Pengguna (User) Dipaksa Rapat Kanan */
-    div[data-testid="stChatMessageUser"] {
-        flex-direction: row-reverse !important;
+    /* KOTAK KETIK INPUT CHAT GLASS iPHONE STYLE */
+    div[data-testid="stChatInputContainer"] > div {
+        border-radius: 30px !important;
+        border: 1px solid rgba(255, 255, 255, 0.2) !important;
+        background: rgba(255, 255, 255, 0.08) !important;
+        backdrop-filter: blur(20px) !important;
+        -webkit-backdrop-filter: blur(20px) !important;
+        box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.3), 
+                    inset 0 1px 1px 0 rgba(255, 255, 255, 0.2) !important;
+        padding: 4px !important;
     }
     
-    /* Asisten (AI) Dipaksa Rapat Kiri */
-    div[data-testid="stChatMessageAssistant"] {
-        flex-direction: row !important;
-    }
-
-    /* BALON CHAT USER: LIQUID GLASS iPHONE BIRU GLOSSY */
-    div[data-testid="stChatMessageUser"] div[data-testid="stChatMessageContent"] {
-        background: linear-gradient(135deg, rgba(0, 140, 255, 0.45) 0%, rgba(0, 90, 255, 0.25) 100%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.35) !important;
-        border-radius: 20px 20px 4px 20px !important;
-        backdrop-filter: blur(25px) !important;
-        -webkit-backdrop-filter: blur(25px) !important;
-        box-shadow: 0 8px 24px rgba(0, 114, 255, 0.3), 
-                    inset 0 1px 2px rgba(255, 255, 255, 0.5) !important;
+    /* Memastikan teks saat mengetik berwarna putih bersih */
+    .stChatInputContainer textarea {
         color: #ffffff !important;
-        padding: 12px 16px !important;
-        max-width: 75% !important;
+        background-color: transparent !important;
     }
 
-    /* BALON CHAT AI: LIQUID GLASS iPHONE FROSTY WHITE */
-    div[data-testid="stChatMessageAssistant"] div[data-testid="stChatMessageContent"] {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-        border-radius: 20px 20px 20px 4px !important;
-        backdrop-filter: blur(25px) !important;
-        -webkit-backdrop-filter: blur(25px) !important;
-        box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 
-                    inset 0 1px 1px rgba(255, 255, 255, 0.25) !important;
+    /* 3. ARSITEKTUR BALON CHAT KUSTOM KANAN-KIRI (REKAYASA HTML) */
+    .chat-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        margin-bottom: 15px;
+    }
+    
+    /* Baris Obrolan Pengguna (Mendorong ke Kanan) */
+    .row-user {
+        display: flex;
+        justify-content: flex-end;
+        width: 100%;
+        margin-bottom: 12px;
+    }
+    
+    /* Baris Obrolan AI (Mendorong ke Kiri) */
+    .row-ai {
+        display: flex;
+        justify-content: flex-start;
+        width: 100%;
+        margin-bottom: 12px;
+    }
+    
+    /* BALON CHAT PENGGUNA: KANAN - BIRU CERAH iPHONE */
+    .bubble-user {
+        background: #1aa1e2 !important;
         color: #ffffff !important;
-        padding: 12px 16px !important;
-        max-width: 75% !important;
+        font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        padding: 12px 18px;
+        border-radius: 18px 18px 4px 18px;
+        max-width: 80%;
+        box-shadow: 0 4px 15px rgba(26, 161, 226, 0.3) !important;
+        word-wrap: break-word;
     }
-
-    /* Memaksa Semua Teks di Dalam Balon Berwarna Putih Terang */
-    div[data-testid="stChatMessageContent"] p, 
-    div[data-testid="stChatMessageContent"] span, 
-    div[data-testid="stChatMessageContent"] div {
+    
+    /* BALON CHAT AI: KIRI - GLASS FROSTY DARK/WHITE */
+    .bubble-ai {
+        background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
         color: #ffffff !important;
+        font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        font-size: 16px;
+        padding: 14px 18px;
+        border-radius: 18px 18px 18px 4px;
+        max-width: 85%;
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2);
+        word-wrap: break-word;
     }
 
-    /* Avatar bulat estetik */
-    div[data-testid="stChatMessageAvatar"] {
-        background: rgba(255, 255, 255, 0.1) !important;
-        border-radius: 50% !important;
-        border: 1px solid rgba(255, 255, 255, 0.2) !important;
-    }
-
-    /* JUDUL DENGAN LIQUID GLASS STYLE iPHONE */
+    /* KILAUAN TEKS JUDUL UTAMA */
     .liquid-title {
         font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
         font-weight: 800 !important;
@@ -99,39 +121,19 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. JAVASCRIPT INJECTION (Menghancurkan Sisa Putih di Bawah Secara Paksa)
+# 3. JAVASCRIPT ENGINE INJECTION (Pembersih Latar Putih Real-Time)
 components.html("""
 <script>
-    function fixStreamlitTheme() {
-        // 1. Cari container paling bawah tempat input berada
-        const bottomContainers = window.parent.document.querySelectorAll('div[data-testid="stBottom"], div[data-testid="stBottomBlockContainer"], .stChatInputContainer');
-        bottomContainers.forEach(el => {
+    function forceClearWhiteBoxes() {
+        const targets = window.parent.document.querySelectorAll('div[data-testid="stBottom"], div[data-testid="stBottomBlockContainer"], .stChatInputContainer, form');
+        targets.forEach(el => {
             el.style.setProperty('background-color', 'transparent', 'important');
             el.style.setProperty('background', 'transparent', 'important');
             el.style.setProperty('box-shadow', 'none', 'important');
             el.style.setProperty('border', 'none', 'important');
         });
-
-        // 2. Ubah Kotak Input Utama Menjadi Efek Kaca iPhone Semu
-        const inputForm = window.parent.document.querySelector('div[data-testid="stChatInputContainer"] > div');
-        if (inputForm) {
-            inputForm.style.setProperty('background', 'rgba(255, 255, 255, 0.1)', 'important');
-            inputForm.style.setProperty('backdrop-filter', 'blur(20px)', 'important');
-            inputForm.style.setProperty('-webkit-backdrop-filter', 'blur(20px)', 'important');
-            inputForm.style.setProperty('border', '1px solid rgba(255, 255, 255, 0.25)', 'important');
-            inputForm.style.setProperty('border-radius', '30px', 'important');
-            inputForm.style.setProperty('box-shadow', '0 4px 20px rgba(0,0,0,0.3), inset 0 1px 1px rgba(255,255,255,0.3)', 'important');
-        }
-
-        // 3. Pastikan Textarea Pengguna Berwarna Putih Bersih
-        const textarea = window.parent.document.querySelector('div[data-testid="stChatInputContainer"] textarea');
-        if (textarea) {
-            textarea.style.setProperty('color', '#ffffff', 'important');
-        }
     }
-
-    // Jalankan berulang-ulang agar ketika user ngetik, warna putihnya tidak balik lagi
-    setInterval(fixStreamlitTheme, 100);
+    setInterval(forceClearWhiteBoxes, 50);
 </script>
 """, height=0, width=0)
 
@@ -150,22 +152,24 @@ client = genai.Client(api_key=api_key)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Menampilkan Riwayat Obrolan
+# 5. RENDER CHAT MENGGUNAKAN HTML KUSTOM (Anti Kotak Abu-Abu Kaku)
 for msg in st.session_state.messages:
-    with st.chat_message(msg["role"], avatar="👨‍💻" if msg["role"] == "user" else "🤖"):
-        st.markdown(msg["content"])
+    if msg["role"] == "user":
+        st.markdown(f'<div class="row-user"><div class="bubble-user">{msg["content"]}</div></div>', unsafe_allow_html=True)
+    else:
+        st.markdown(f'<div class="row-ai"><div class="bubble-ai">{msg["content"]}</div></div>', unsafe_allow_html=True)
 
 # Kotak Input Tempat Mengetik Pesan
-if user_input := st.chat_input("Tanyakan sesuatu, Tuan Zayn..."):
-    with st.chat_message("user", avatar="👨‍💻"):
-        st.markdown(user_input)
+if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
+    # Tampilkan chat user instan di sebelah kanan
+    st.markdown(f'<div class="row-user"><div class="bubble-user">{user_input}</div></div>', unsafe_allow_html=True)
     st.session_state.messages.append({"role": "user", "content": user_input})
     
-    with st.chat_message("assistant", avatar="🤖"):
-        try:
-            response = client.models.generate_content(model='gemini-2.5-flash', contents=user_input)
-            st.markdown(response.text)
-            st.session_state.messages.append({"role": "assistant", "content": response.text})
-        except Exception as e:
-            st.error(f"Error: {e}")
-            
+    try:
+        response = client.models.generate_content(model='gemini-2.5-flash', contents=user_input)
+        # Tampilkan balasan AI instan di sebelah kiri dengan Liquid Glass
+        st.markdown(f'<div class="row-ai"><div class="bubble-ai">{response.text}</div></div>', unsafe_allow_html=True)
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
+    except Exception as e:
+        st.error(f"Error: {e}")
+        
