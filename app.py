@@ -4,7 +4,7 @@ from google import genai
 # 1. Konfigurasi Halaman & Favicon Ikon Tetesan Air
 st.set_page_config(page_title="cvAI4 Assistant", page_icon="💧", layout="centered")
 
-# 2. CSS LIQUID GLASS iPHONE & BIRU ULTRA HD (Membersihkan Putih di Bawah)
+# 2. CSS LIQUID GLASS iPHONE & BIRU ULTRA HD (Pembersih Putih Bawah Total)
 st.markdown("""
 <style>
     /* Mengubah warna latar belakang global ke Biru Gelap HD */
@@ -13,18 +13,27 @@ st.markdown("""
         color: #e0f2fe !important;
     }
     
-    /* MENYAPU BERSIH WARNA PUTIH DI BAGIAN BAWAH */
-    div[data-testid="stBottom"], 
-    div[data-testid="stBottomBlockContainer"],
-    .stChatInputContainer {
-        background-color: transparent !important;
+    /* TRICK JITU: Memaksa semua elemen pembungkus bawah menjadi transparan */
+    footer {visibility: hidden !important;}
+    
+    header[data-testid="stHeader"] {
         background: transparent !important;
     }
     
-    /* EFEK LIQUID GLASS iPHONE PADA KOTAK INPUT CHAT */
-    .stChatInputContainer {
+    /* Menghapus warna putih di seluruh lapisan container bawah */
+    div[data-testid="stBottom"],
+    div[data-testid="stBottomBlockContainer"],
+    div[data-testid="stChatInputContainer"],
+    .stChatInputContainer,
+    form {
+        background-color: transparent !important;
+        background: transparent !important;
+        border: none !important;
+    }
+    
+    /* EFEK LIQUID GLASS iPHONE PADA KOTAK INPUT CHAT ASLI */
+    div[data-testid="stChatInputContainer"] > div {
         border-radius: 30px !important;
-        /* Menggunakan border semi-transparan putih di atas & kiri untuk efek kilauan kaca iPhone */
         border: 1px solid rgba(255, 255, 255, 0.25) !important;
         background: linear-gradient(135deg, rgba(56, 189, 248, 0.15) 0%, rgba(255, 255, 255, 0.05) 100%) !important;
         backdrop-filter: blur(25px) !important;
@@ -34,9 +43,10 @@ st.markdown("""
         padding: 4px !important;
     }
     
-    /* Warna teks di dalam kotak ketik agar putih bersih */
+    /* Mengatur warna teks input di dalam box agar putih bersih */
     .stChatInputContainer textarea {
         color: #ffffff !important;
+        background-color: transparent !important;
     }
     
     /* EFEK LIQUID GLASS iPHONE PADA BALON OBROLAN (CHAT BUBBLES) */
@@ -58,7 +68,7 @@ st.markdown("""
                     inset 0 1px 3px rgba(255, 255, 255, 0.5) !important;
     }
     
-    /* EFEK LIQUID GLASS iPHONE PADA TULISAN JUDUL (cvAI4 Assistant) */
+    /* EFEK LIQUID GLASS iPHONE PADA TULISAN JUDUL */
     .liquid-title {
         color: #00d2ff !important;
         font-family: '-apple-system', BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -80,7 +90,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. KONTEN UTAMA APLIKASI DENGAN TAMPILAN LIQUID GLASS
+# 3. KONTEN UTAMA APLIKASI
 st.markdown('<h1 class="liquid-title">💧 cvAI4 Assistant • By Zayn</h1>', unsafe_allow_html=True)
 st.markdown('<p class="custom-caption">Lab cvAI4 Aktif • Created by -Oxy-</p>', unsafe_allow_html=True)
 
@@ -105,6 +115,14 @@ if user_input := st.chat_input("Tanyakan sesuatu, Tuan Zayn..."):
     with st.chat_message("user", avatar="👨‍💻"):
         st.markdown(user_input)
     st.session_state.messages.append({"role": "user", "content": user_input})
+    
+    with st.chat_message("assistant", avatar="🤖"):
+        try:
+            response = client.models.generate_content(model='gemini-2.5-flash', contents=user_input)
+            st.markdown(response.text)
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
+        except Exception as e:
+            st.error(f"Error: {e}")
     
     with st.chat_message("assistant", avatar="🤖"):
         try:
