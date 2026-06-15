@@ -26,16 +26,6 @@ st.markdown("""
     header[data-testid="stHeader"] { background: transparent !important; }
     footer { visibility: hidden !important; }
 
-    /* Styling Sidebar untuk Pemilihan Mode */
-    section[data-testid="stSidebar"] {
-        background-color: rgba(13, 9, 24, 0.95) !important;
-        border-right: 1px solid rgba(168, 85, 247, 0.2) !important;
-    }
-    section[data-testid="stSidebar"] .stSelectbox label {
-        color: #d8b4fe !important;
-        font-weight: 600 !important;
-    }
-
     /* 🔮 ANIMATED ORB UTAMA */
     .cyber-core-container {
         display: flex;
@@ -122,6 +112,56 @@ st.markdown("""
         box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5) !important;
     }
 
+    /* 🏷️ SEKSI TENTANG SAYA DI BAGIAN BAWAH */
+    .about-section-container {
+        text-align: center;
+        margin-top: 60px;
+        margin-bottom: 20px;
+    }
+    .about-title {
+        font-size: 2rem !important;
+        font-weight: 800 !important;
+        color: #d8b4fe !important;
+        margin-bottom: 30px;
+    }
+    .about-profile-circle {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 2px solid #8b5cf6;
+        box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+        margin: 0 auto 25px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(13, 9, 24, 0.6);
+    }
+    .about-profile-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+        opacity: 0.9;
+        letter-spacing: 1px;
+    }
+    
+    /* Deskripsi Penjelasan oXy AI */
+    .about-description-box {
+        max-width: 500px;
+        margin: 0 auto 60px auto;
+        padding: 0 20px;
+        text-align: center;
+    }
+    .about-text-p {
+        font-size: 1rem;
+        color: #94a3b8;
+        line-height: 1.7;
+        margin-bottom: 15px;
+    }
+    .about-highlight {
+        color: #c084fc !important;
+        font-weight: 600;
+    }
+
     /* CHAT CORE LAYOUT & GELEMBUNG INPUT */
     div[data-testid="stChatInputContainer"] > div {
         border-radius: 30px !important;
@@ -159,6 +199,12 @@ st.markdown("""
         border: 1px solid rgba(168, 85, 247, 0.5);
     }
     .cyber-ai-content-flow { color: #dbd5ea !important; line-height: 1.7 !important; }
+    
+    div[data-testid="stMarkdownContainer"] pre {
+        background-color: #06040a !important;
+        border: 1px solid rgba(168, 85, 247, 0.35) !important;
+        border-radius: 16px !important;
+    }
 
     /* 🟢 ANIMASI GELEMBUNG PEMIKIR */
     .typing-indicator {
@@ -213,7 +259,7 @@ components.html("""
 if "sudah_masuk" not in st.session_state:
     st.session_state.sudah_masuk = False
 
-# 🏠 HALAMAN 1: WELCOME SCREEN
+# 🏠 HALAMAN 1: WELCOME SCREEN (NAMA AMAN FIX ZAYN & oXy AI)
 if not st.session_state.sudah_masuk:
     st.markdown('<div class="cyber-core-container"><div class="cyber-core"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title">oXy AI</h1>', unsafe_allow_html=True)
@@ -221,7 +267,7 @@ if not st.session_state.sudah_masuk:
     
     st.html("""
     <div class="welcome-card-cyber">
-        <div class="welcome-h1">Halo, Saya Dardcor</div>
+        <div class="welcome-h1">Halo, Saya Zayn</div>
         <div class="welcome-p">
             Seorang <strong>Pengembang Perangkat Lunak</strong> yang bersemangat menciptakan solusi inovatif.
         </div>
@@ -233,32 +279,26 @@ if not st.session_state.sudah_masuk:
         if st.button("Lihat Proyek Saya 🔮", key="enter_cyber_btn", use_container_width=True):
             st.session_state.sudah_masuk = True
             st.rerun()
-
-# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA
-else:
-    # --- FITUR BARU: SIDEBAR PEMILIHAN MODE MODEL AI ---
-    with st.sidebar:
-        st.markdown("### ⚙️ Pengaturan Core")
-        mode_pilihan = st.selectbox(
-            "Pilih Mode AI:",
-            ["oXy Flash ⚡ (Cepat & Hemat)", "oXy Pro 🧠 (Cerdas & Detail)"]
-        )
-        
-        # Mapping string ke ID model asli OpenRouter
-        if "Flash" in mode_pilihan:
-            model_terpilih = "google/gemini-2.5-flash"  # Mode super cepat & hemat kuota
-            deskripsi_mode = "Menggunakan Gemini 2.5 Flash. Respon instan kilat!"
-        else:
-            model_terpilled = "openrouter/auto"          # Mode pintar otomatis / Pro
-            model_terpilih = "google/gemini-pro"        # Bisa diarahkan ke Gemini Pro asli
-            deskripsi_mode = "Menggunakan Gemini Pro. Analisis dalam & logika kuat."
             
-        st.caption(f"ℹ️ {deskripsi_mode}")
-        st.markdown("---")
+    st.html("""
+    <div class="about-section-container">
+        <div class="about-title">Tentang Saya</div>
+        <div class="about-profile-circle">
+            <div class="about-profile-text">Zayn Profile</div>
+        </div>
+    </div>
+    <div class="about-description-box">
+        <p class="about-text-p">
+            <span class="about-highlight">oXy AI</span> adalah entitas sistem kecerdasan buatan siber mutakhir yang dirancang khusus oleh <span class="about-highlight">Zayn</span> untuk membantu mempercepat alur kerja pengembangan perangkat lunak, perakitan skrip kode, dan manajemen logika komputasi secara cerdas.
+        </p>
+    </div>
+    """)
 
+# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA (GRATIS & STABLE)
+else:
     st.markdown('<div class="cyber-core-container" style="margin-top:2%;"><div class="cyber-core" style="width:70px; height:70px; box-shadow: 0 0 25px rgba(168,85,247,0.4);"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title" style="font-size: 1.8rem !important;">oXy AI Core</h1>', unsafe_allow_html=True)
-    st.markdown(f'<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Mode Aktif: {mode_pilihan.split(" ")[1]}</p>', unsafe_allow_html=True)
+    st.markdown('<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Powered by OpenRouter • Lab Active</p>', unsafe_allow_html=True)
 
     openrouter_key = st.secrets.get("OPENROUTER_API_KEY")
     if not openrouter_key:
@@ -279,10 +319,12 @@ else:
         else:
             st.session_state.messages = []
 
-    if st.button("🗑️ Kosongkan Sesi oXy", key="cyber_reset"):
-        if os.path.exists(FILE_ARSIP): os.remove(FILE_ARSIP)
-        st.session_state.messages = []
-        st.rerun()
+    col_reset, _ = st.columns([2, 2])
+    with col_reset:
+        if st.button("🗑️ Kosongkan Sesi oXy", key="cyber_reset"):
+            if os.path.exists(FILE_ARSIP): os.remove(FILE_ARSIP)
+            st.session_state.messages = []
+            st.rerun()
 
     for msg in st.session_state.messages:
         if msg["role"] == "user":
@@ -299,7 +341,7 @@ else:
         if len(st.session_state.messages) == 0:
             st.session_state.messages.append({
                 "role": "system", 
-                "content": "You are oXy AI, a highly advanced artificial intelligence developed by Dardcor. Always assist Tuan Gigs professionally."
+                "content": "You are oXy AI, a highly advanced artificial intelligence developed by Zayn. Always assist Tuan Gigs professionally and use code blocks when delivering scripts."
             })
             
         st.session_state.messages.append({"role": "user", "content": user_input})
@@ -310,12 +352,12 @@ else:
         try:
             placeholder_loading = st.empty()
             with placeholder_loading.container():
-                st.html(f"""
+                st.html("""
                 <div style="display:flex; justify-content:flex-start;">
                     <div class="cyber-ai-bubble-box" style="margin-bottom:10px;">
                         <div class="ai-header-inline">
                             <div class="ai-mini-orb"></div>
-                            <div style="font-weight:700; color:#fff; font-size:0.95rem;">oXy AI ({mode_pilihan.split(" ")[1]}) berpikir...</div>
+                            <div style="font-weight:700; color:#fff; font-size:0.95rem;">oXy AI berpikir...</div>
                         </div>
                         <div class="typing-indicator">
                             <div class="typing-dot"></div>
@@ -326,9 +368,8 @@ else:
                 </div>
                 """)
             
-            # Panggil API menggunakan variabel 'model_terpilih' yang dinamis dari Sidebar
             response_stream = client.chat.completions.create(
-                model=model_terpilih, 
+                model="openrouter/auto", 
                 messages=st.session_state.messages,
                 stream=True
             )
@@ -354,8 +395,5 @@ else:
             
         except Exception as e:
             placeholder_loading.empty()
-            if "402" in str(e) or "Balance" in str(e):
-                st.error("⚠️ Saldo OpenRouter habis (Error 402). Silakan isi saldo di OpenRouter agar mode Flash/Pro bisa berjalan kembali!")
-            else:
-                st.error(f"Gagal mengambil respons OpenRouter: {e}")
-        
+            st.error(f"Gagal mengambil respons OpenRouter: {e}")
+                          
