@@ -48,13 +48,26 @@ st.markdown("""
     }
 
     /* STRUCTURE ALIGNMENT CHAT (KANAN & KIRI) */
-    .chat-row {
+    .chat-container-block {
         display: flex !important;
+        flex-direction: column !important;
         width: 100% !important;
         margin-bottom: 18px !important;
     }
-    .align-user { justify-content: flex-end !important; }
-    .align-ai { justify-content: flex-start !important; }
+    .align-user { align-items: flex-end !important; }
+    .align-ai { align-items: flex-start !important; }
+
+    /* NAMA ASISTEN (SUB-LABEL DI ATAS BALON CHAT AI) */
+    .ai-name-tag {
+        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
+        font-size: 11px !important;
+        color: #38bdf8 !important;
+        font-weight: 600 !important;
+        letter-spacing: 0.5px;
+        margin-left: 8px !important;
+        margin-bottom: 4px !important;
+        opacity: 0.85;
+    }
 
     /* USER BUBBLE: BIRU CERAH iPHONE */
     .iphone-user {
@@ -73,7 +86,7 @@ st.markdown("""
         color: #ffffff !important;
         font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         padding: 6px 18px !important;
-        border-radius: 20px 20px 20px 4px !important;
+        border-radius: 4px 20px 20px 20px !important; /* Disesuaikan agar serasi dengan text tag */
         max-width: 90% !important;
         border: 1px solid rgba(255, 255, 255, 0.15) !important;
         backdrop-filter: blur(25px) !important;
@@ -134,25 +147,26 @@ client = genai.Client(api_key=api_key)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# 5. RENDER CHAT DENGAN STYLING KANAN-KIRI TANPA MERUSAK MARKDOWN
+# 5. RENDER CHAT DENGAN TAG NAMA KUSTOM
 for msg in st.session_state.messages:
     if msg["role"] == "user":
-        st.html(f'<div class="chat-row align-user"><div class="iphone-user">{msg["content"]}</div></div>')
+        st.html(f'<div class="chat-container-block align-user"><div class="iphone-user">{msg["content"]}</div></div>')
     else:
-        # Menggunakan st.html gabungan untuk mengisolasi bubble custom tanpa merusak isi markdown internal
-        st.html('<div class="chat-row align-ai"><div class="iphone-ai">')
+        # Menambahkan tag nama di atas balon AI
+        st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">oXy AI • By Zayn</div><div class="iphone-ai">')
         st.markdown(msg["content"])
         st.html('</div></div>')
 
 # INPUT FIELD CHAT
 if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
-    st.html(f'<div class="chat-row align-user"><div class="iphone-user">{user_input}</div></div>')
+    st.html(f'<div class="chat-container-block align-user"><div class="iphone-user">{user_input}</div></div>')
     st.session_state.messages.append({"role": "user", "content": user_input})
     
     try:
         response = client.models.generate_content(model='gemini-2.5-flash', contents=user_input)
         
-        st.html('<div class="chat-row align-ai"><div class="iphone-ai">')
+        # Menambahkan tag nama untuk respons baru
+        st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">oXy AI • By Zayn</div><div class="iphone-ai">')
         st.markdown(response.text)
         st.html('</div></div>')
         
