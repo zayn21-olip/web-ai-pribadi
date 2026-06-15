@@ -8,9 +8,16 @@ import json
 # 1. Konfigurasi Halaman & Favicon
 st.set_page_config(page_title="oXy AI • By Zayn", page_icon="🧪", layout="centered")
 
-# 2. CSS CUSTOM: HIJAU TOSCA PREMIUM, LIQUID GLASS IPHONE, & ANIMATED BUBBLES
+# 2. CSS CUSTOM: HIJAU TOSCA, LIQUID GLASS IPHONE, ANIMATED BUBBLES & IPHONE EMOJI INJECTION
 st.markdown("""
 <style>
+    /* 🍏 INJEKSI FONT EMOJI IPHONE (APPLE COLOR EMOJI) */
+    @import url('https://fonts.cdnfonts.com/css/apple-color-emoji');
+    
+    * {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji" !important;
+    }
+
     /* Latar Belakang Deep Teal-Black */
     .stApp {
         background: linear-gradient(135deg, #010c0e 0%, #032525 50%, #011112 100%) !important;
@@ -36,7 +43,6 @@ st.markdown("""
         backdrop-filter: blur(2px);
         animation: floatBubble 12s infinite ease-in-out;
     }
-    /* Variasi ukuran dan posisi gelembung */
     .b1 { width: 120px; height: 120px; left: 10%; animation-delay: 0s; animation-duration: 14s; }
     .b2 { width: 180px; height: 180px; left: 70%; top: 20%; animation-delay: 2s; animation-duration: 18s; }
     .b3 { width: 90px; height: 90px; left: 40%; top: 60%; animation-delay: 4s; animation-duration: 12s; }
@@ -58,7 +64,7 @@ st.markdown("""
         padding: 45px 25px;
         margin-top: 8%;
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(45, 212, 191, 0.03) 100%) !important;
-        border-radius: 35px 15px 35px 15px; /* Lekukan asimetris organik ala liquid glass */
+        border-radius: 35px 15px 35px 15px;
         border: 1px solid rgba(45, 212, 191, 0.3);
         backdrop-filter: blur(30px);
         -webkit-backdrop-filter: blur(30px);
@@ -75,7 +81,6 @@ st.markdown("""
     }
 
     .welcome-creator {
-        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         font-size: 13px;
         text-transform: uppercase;
         letter-spacing: 3px;
@@ -85,7 +90,6 @@ st.markdown("""
     }
 
     .welcome-quote {
-        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         font-size: 1.15rem;
         color: #ccfbf1;
         line-height: 1.7;
@@ -94,13 +98,12 @@ st.markdown("""
     }
 
     .welcome-sub {
-        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         font-size: 0.9rem;
         color: #94a3b8;
         margin-bottom: 35px;
     }
 
-    /* 🟢 TOMBOL MASUK UTAMA (GRADASI HIJAU TOSCA MENYALA) */
+    /* 🟢 TOMBOL MASUK UTAMA */
     div[data-testid="stElementContainer"] button[key="enter_ai_btn"] {
         background: linear-gradient(135deg, #0d9488 0%, #2dd4bf 100%) !important;
         color: #011112 !important;
@@ -113,7 +116,7 @@ st.markdown("""
         transition: all 0.3s ease;
     }
 
-    /* 🎯 TOMBOL RESET (KONTRAST BLACK ON WHITE) */
+    /* 🎯 TOMBOL RESET */
     div[data-testid="stColumn"] button {
         color: #000000 !important;
         font-weight: 700 !important;
@@ -163,7 +166,6 @@ st.markdown("""
     .align-ai { align-items: flex-start !important; }
 
     .ai-name-tag {
-        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         font-size: 12px !important;
         color: #2dd4bf !important;
         font-weight: 700 !important;
@@ -172,7 +174,6 @@ st.markdown("""
         margin-bottom: 6px !important;
     }
     .user-name-tag {
-        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         font-size: 12px !important;
         color: #99f6e4 !important;
         font-weight: 700 !important;
@@ -180,13 +181,12 @@ st.markdown("""
         margin-bottom: 6px !important;
     }
 
-    /* 📱 BALON CHAT USER: IPHONE LIQUID GLASS STYLE (TOSCA GRADIENT) */
+    /* 📱 BALON CHAT USER: IPHONE LIQUID GLASS STYLE */
     .iphone-user {
         background: linear-gradient(135deg, #0d9488 0%, #14b8a6 100%) !important;
         color: #ffffff !important;
-        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         padding: 14px 20px !important;
-        border-radius: 25px 25px 6px 25px !important; /* Desain sudut membulat halus khas iOS */
+        border-radius: 25px 25px 6px 25px !important;
         max-width: 80% !important;
         box-shadow: 0 8px 25px rgba(13, 148, 136, 0.4) !important;
     }
@@ -196,7 +196,6 @@ st.markdown("""
     .iphone-ai {
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.07) 0%, rgba(45, 212, 191, 0.02) 100%) !important;
         color: #e2f1f1 !important;
-        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         padding: 14px 20px !important;
         border-radius: 6px 25px 25px 25px !important;
         max-width: 90% !important;
@@ -213,9 +212,8 @@ st.markdown("""
         border: 1px solid rgba(45, 212, 191, 0.2) !important;
     }
 
-    /* HEADLINE BRANDING MENGGUNAKAN TEKS GLOWING TOSCA */
+    /* HEADLINE BRANDING */
     .liquid-title {
-        font-family: '-apple-system', sans-serif;
         font-weight: 800 !important;
         font-size: 2.5rem !important;
         background: linear-gradient(to right, #ffffff, #2dd4bf, #0d9488);
@@ -223,7 +221,6 @@ st.markdown("""
         -webkit-text-fill-color: transparent !important;
     }
     .liquid-title-welcome {
-        font-family: '-apple-system', sans-serif;
         font-weight: 800 !important;
         font-size: 2.6rem !important;
         background: linear-gradient(to right, #ffffff, #2dd4bf, #ccfbf1);
@@ -233,7 +230,7 @@ st.markdown("""
     }
     .custom-caption { color: #2dd4bf !important; font-weight: 500; margin-bottom: 25px; opacity: 0.9; }
 
-    /* 🌊 ANIMASI LOADING GELOMBANG TOSCA MINT GLOW */
+    /* 🌊 ANIMASI LOADING GELOMBANG TOSCA */
     .gemini-loading-box { display: flex; flex-direction: column; gap: 8px; width: 100%; padding: 6px 4px; }
     .gemini-wave {
         height: 12px;
@@ -250,7 +247,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# RENDER INJEKSI GELEMBUNG LIQUID DI BACKGROUND WEB
+# RENDER INTEGRASI GELEMBUNG BACKGROUND
 st.markdown("""
 <div class="bubble-bg">
     <div class="bubble b1"></div>
@@ -281,7 +278,7 @@ components.html("""
 if "sudah_masuk" not in st.session_state:
     st.session_state.sudah_masuk = False
 
-# A. TAMPILAN 1: HALAMAN PENYAMBUTAN (WELCOME SCREEN) - TOSCA VERSION
+# A. TAMPILAN 1: HALAMAN PENYAMBUTAN (WELCOME SCREEN)
 if not st.session_state.sudah_masuk:
     st.html("""
     <div class="welcome-container">
@@ -336,7 +333,6 @@ else:
     if "messages" not in st.session_state:
         st.session_state.messages = muat_arsip_chat()
 
-    # TOMBOL RESET KUSTOM (Teks Hitam)
     col_reset, _ = st.columns([2, 2])
     with col_reset:
         if st.button("🗑️ Reset & Hapus Semua Arsip", key="custom_reset_btn"):
@@ -345,7 +341,7 @@ else:
             st.session_state.messages = []
             st.rerun()
 
-    # 5. RENDER UTAMA HISTORI CHAT
+    # 5. RENDER UTAMA HISTORI CHAT WITH IPHONE EMOJI STYLE
     for msg in st.session_state.messages:
         if msg["role"] == "user":
             st.html(f'<div class="chat-container-block align-user"><div class="user-name-tag">Tuan Gigs 👨‍💻</div><div class="iphone-user">{msg["content"]}</div></div>')
@@ -370,7 +366,7 @@ else:
         st.session_state.messages.append({"role": "user", "content": user_input})
         simpan_ke_arsip(st.session_state.messages)
         
-        # LOADING GELOMBANG GEMINI (EFEK GLOWING TOSCA)
+        # LOADING GELOMBANG GEMINI
         st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI Memikirkan Jawaban...</div><div class="iphone-ai" style="background: rgba(255,255,255,0.05) !important;">')
         loading_placeholder = st.empty()
         loading_placeholder.html("""
@@ -408,3 +404,4 @@ else:
         except Exception as e:
             loading_placeholder.empty()
             st.error(f"Waduh Tuan, ada kendala pada server OpenRouter: {e}")
+    
