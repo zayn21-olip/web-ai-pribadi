@@ -8,7 +8,7 @@ import json
 # 1. Konfigurasi Halaman & Favicon
 st.set_page_config(page_title="oXy AI • By Zayn", page_icon="💧", layout="centered")
 
-# 2. CSS RESET, FIXED TOMBOL TEXT HITAM, & NEON GEMINI WAVE LOADING
+# 2. CSS RESET, LANDING PAGE ANIMATION, BUTTONS & NEON GEMINI WAVE LOADING
 st.markdown("""
 <style>
     .stApp {
@@ -18,7 +18,53 @@ st.markdown("""
     header[data-testid="stHeader"] { background: transparent !important; }
     footer { visibility: hidden !important; }
 
-    /* 🎯 FIX TOMBOL RESET: PAKSA TEKS WARNA HITAM PEKAT */
+    /* 🎯 STYLE KHUSUS HALAMAN PENYAMBUTAN (WELCOME SCREEN) */
+    .welcome-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        padding: 40px 20px;
+        margin-top: 10%;
+        background: rgba(255, 255, 255, 0.04) !important;
+        border-radius: 24px;
+        border: 1px solid rgba(56, 189, 248, 0.2);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+    }
+    
+    .welcome-logo {
+        font-size: 70px;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite ease-in-out;
+    }
+
+    .welcome-quote {
+        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
+        font-size: 1.2rem;
+        color: #e2e8f0;
+        line-height: 1.6;
+        margin-bottom: 30px;
+        max-width: 500px;
+        font-style: italic;
+    }
+
+    /* FIX WARNA TOMBOL MASUK UTAMA */
+    div[data-testid="stElementContainer"] button[key="enter_ai_btn"] {
+        background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%) !important;
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        font-size: 16px !important;
+        padding: 12px 35px !important;
+        border-radius: 30px !important;
+        border: none !important;
+        box-shadow: 0 8px 25px rgba(0, 114, 255, 0.4) !important;
+        transition: all 0.3s ease;
+    }
+
+    /* FIX TOMBOL RESET: PAKSA TEKS WARNA HITAM PEKAT */
     div[data-testid="stColumn"] button {
         color: #000000 !important;
         font-weight: 700 !important;
@@ -26,7 +72,6 @@ st.markdown("""
         border: 1px solid #ffffff !important;
         border-radius: 12px !important;
     }
-    
     div[data-testid="stColumn"] button p {
         color: #000000 !important;
         font-weight: 700 !important;
@@ -77,7 +122,6 @@ st.markdown("""
         margin-left: 8px !important;
         margin-bottom: 6px !important;
     }
-    
     .user-name-tag {
         font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
         font-size: 12px !important;
@@ -87,7 +131,6 @@ st.markdown("""
         margin-bottom: 6px !important;
     }
 
-    /* BALON CHAT USER ESTETIK */
     .iphone-user {
         background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%) !important;
         color: #ffffff !important;
@@ -99,7 +142,6 @@ st.markdown("""
     }
     .iphone-user p, .iphone-user span { color: #ffffff !important; }
 
-    /* BALON CHAT AI GLASS EFFECT (KEMBALI KE PUTIH EMAS ESTETIK) */
     .iphone-ai {
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
         color: #ffffff !important;
@@ -113,15 +155,8 @@ st.markdown("""
         box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4), 
                     inset 0 1px 2px rgba(255, 255, 255, 0.2) !important;
     }
-    .iphone-ai p, .iphone-ai span, .iphone-ai li, .iphone-ai h1, .iphone-ai h2, .iphone-ai h3 { 
-        color: #ffffff !important; 
-    }
-
-    .iphone-ai code, .iphone-ai pre {
-        background-color: rgba(0, 0, 0, 0.5) !important;
-        color: #38bdf8 !important;
-        border: 1px solid rgba(255, 255, 255, 0.1) !important;
-    }
+    .iphone-ai p, .iphone-ai span, .iphone-ai li, .iphone-ai h1, .iphone-ai h2, .iphone-ai h3 { color: #ffffff !important; }
+    .iphone-ai code, .iphone-ai pre { background-color: rgba(0, 0, 0, 0.5) !important; color: #38bdf8 !important; }
 
     .liquid-title {
         font-family: '-apple-system', sans-serif;
@@ -131,16 +166,19 @@ st.markdown("""
         -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent !important;
     }
+    .liquid-title-welcome {
+        font-family: '-apple-system', sans-serif;
+        font-weight: 800 !important;
+        font-size: 2.8rem !important;
+        background: linear-gradient(to right, #ffffff, #38bdf8, #a7f3d0);
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        margin-bottom: 15px;
+    }
     .custom-caption { color: #7dd3fc !important; font-weight: 500; margin-bottom: 25px; }
 
-    /* 🌊 ANIMASI LOADING GELOMBANG GEMINI CYAN MINT GLOW */
-    .gemini-loading-box {
-        display: flex;
-        flex-direction: column;
-        gap: 8px;
-        width: 100%;
-        padding: 6px 4px;
-    }
+    /* 🌊 ANIMASI LOADING GELOMBANG GEMINI */
+    .gemini-loading-box { display: flex; flex-direction: column; gap: 8px; width: 100%; padding: 6px 4px; }
     .gemini-wave {
         height: 12px;
         background: linear-gradient(90deg, #38bdf8 25%, #a7f3d0 50%, #38bdf8 75%);
@@ -149,18 +187,14 @@ st.markdown("""
         border-radius: 6px;
         box-shadow: 0 0 10px rgba(56, 189, 248, 0.6);
     }
-    .w-1 { width: 45%; }
-    .w-2 { width: 85%; }
-    .w-3 { width: 60%; }
+    .w-1 { width: 45%; } .w-2 { width: 85%; } .w-3 { width: 60%; }
 
-    @keyframes geminiWaveAnim {
-        0% { background-position: 200% 0; }
-        100% { background-position: -200% 0; }
-    }
+    @keyframes geminiWaveAnim { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
 </style>
 """, unsafe_allow_html=True)
 
-# 3. JAVASCRIPT ENGINE (Pembersih Background)
+# 3. JAVASCRIPT ENGINE (Pembersih Latar Belakang)
 components.html("""
 <script>
     function clearWhitePlates() {
@@ -176,109 +210,135 @@ components.html("""
 </script>
 """, height=0, width=0)
 
-# 4. HEADER UTAMA BRANDING
-st.markdown('<h1 class="liquid-title">💧 oXy AI • By Zayn</h1>', unsafe_allow_html=True)
-st.markdown('<p class="custom-caption">Lab cvAI4 Aktif • Persistent Archive Memory Enabled</p>', unsafe_allow_html=True)
 
-or_api_key = st.secrets.get("OPENROUTER_API_KEY")
-if not or_api_key:
-    st.error("⚠️ Token OPENROUTER_API_KEY tidak ditemukan di menu Secrets Streamlit Anda.")
-    st.stop()
+# ================= INITIATE STATE HALAMAN =================
+if "sudah_masuk" not in st.session_state:
+    st.session_state.sudah_masuk = False
 
-client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=or_api_key)
 
-# ==================== SISTEM ARSIP MEMORI FILE Teks ====================
-FILE_ARSIP = "arsip_chat.json"
-
-def muat_arsip_chat():
-    if os.path.exists(FILE_ARSIP):
-        try:
-            with open(FILE_ARSIP, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except:
-            return []
-    return []
-
-def simpan_ke_arsip(pesan_list):
-    with open(FILE_ARSIP, "w", encoding="utf-8") as f:
-        json.dump(pesan_list, f, ensure_ascii=False, indent=4)
-# ======================================================================
-
-if "messages" not in st.session_state:
-    st.session_state.messages = muat_arsip_chat()
-
-# TOMBOL RESET KUSTOM (Teks Hitam Pekat)
-col_reset, _ = st.columns([2, 2])
-with col_reset:
-    if st.button("🗑️ Reset & Hapus Semua Arsip", key="custom_reset_btn"):
-        if os.path.exists(FILE_ARSIP):
-            os.remove(FILE_ARSIP)
-        st.session_state.messages = []
-        st.rerun()
-
-# 5. RENDER UTAMA HISTORI CHAT
-for msg in st.session_state.messages:
-    if msg["role"] == "user":
-        st.html(f'<div class="chat-container-block align-user"><div class="user-name-tag">Tuan Gigs 👨‍💻</div><div class="iphone-user">{msg["content"]}</div></div>')
-    elif msg["role"] == "assistant":
-        st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI • By Zayn</div><div class="iphone-ai">')
-        st.markdown(msg["content"])
-        st.html('</div></div>')
-
-# INPUT FIELD CHAT UTAMA
-if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
-    st.html(f'<div class="chat-container-block align-user"><div class="user-name-tag">Tuan Gigs 👨‍💻</div><div class="iphone-user">{user_input}</div></div>')
-    
-    # KUNCI SYSTEM INSTRUCTION DI MEMORI UTAMA (ANTI DIWIPE)
-    if len(st.session_state.messages) == 0:
-        system_instruction = (
-            "You are oXy AI, created by -Oxy-. Rules for language: "
-            "1. Look at the user's very first message. If the first message is in English, reply in English. "
-            "2. If the first message is in Indonesian or any other language, you MUST strictly reply and continue the whole conversation in Indonesian only. "
-            "Act like a cool Gen Z assistant, helpful, smart, and adaptive."
-        )
-        st.session_state.messages.append({"role": "system", "content": system_instruction})
-        
-    st.session_state.messages.append({"role": "user", "content": user_input})
-    simpan_ke_arsip(st.session_state.messages)
-    
-    # LOADING GELOMBANG GEMINI GLOWING
-    st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI Memikirkan Jawaban...</div><div class="iphone-ai" style="background: rgba(255,255,255,0.1) !important;">')
-    loading_placeholder = st.empty()
-    loading_placeholder.html("""
-        <div class="gemini-loading-box">
-            <div class="gemini-wave w-1"></div>
-            <div class="gemini-wave w-2"></div>
-            <div class="gemini-wave w-3"></div>
+# A. TAMPILAN 1: HALAMAN PENYAMBUTAN (WELCOME SCREEN)
+if not st.session_state.sudah_masuk:
+    st.html("""
+    <div class="welcome-container">
+        <div class="welcome-logo">💧</div>
+        <div class="liquid-title-welcome">Selamat Datang di oXy AI</div>
+        <div class="welcome-quote">
+            "Kecerdasan tanpa batas, dirancang khusus untuk masa depan. Masuki ruang eksperimen digital tercanggih buatan -Oxy-."
         </div>
+    </div>
     """)
-    st.html('</div></div>')
     
-    try:
-        # FIX UTAMA: Kirim seluruh isi messages (termasuk "system prompt" rahasia) ke server OpenRouter
-        response = client.chat.completions.create(
-            model="openrouter/free",
-            messages=st.session_state.messages
-        )
-        full_response = response.choices[0].message.content
+    # Tombol masuk utama yang diletakkan di tengah bawah container welcome
+    st.markdown("<br>", unsafe_allow_html=True)
+    _, col_btn, _ = st.columns([1, 2, 1])
+    with col_btn:
+        if st.button("🚀 Buka Halaman Utama AI", key="enter_ai_btn", use_container_width=True):
+            st.session_state.sudah_masuk = True
+            st.rerun()
+
+
+# B. TAMPILAN 2: HALAMAN UTAMA CHAT BOT AI (Akan terbuka setelah tombol ditekan)
+else:
+    # 4. HEADER UTAMA BRANDING
+    st.markdown('<h1 class="liquid-title">💧 oXy AI • By Zayn</h1>', unsafe_allow_html=True)
+    st.markdown('<p class="custom-caption">Lab cvAI4 Aktif • Persistent Archive Memory Enabled</p>', unsafe_allow_html=True)
+
+    or_api_key = st.secrets.get("OPENROUTER_API_KEY")
+    if not or_api_key:
+        st.error("⚠️ Token OPENROUTER_API_KEY tidak ditemukan di menu Secrets Streamlit Anda.")
+        st.stop()
+
+    client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=or_api_key)
+
+    # SISTEM ARSIP MEMORI FILE Teks
+    FILE_ARSIP = "arsip_chat.json"
+
+    def muat_arsip_chat():
+        if os.path.exists(FILE_ARSIP):
+            try:
+                with open(FILE_ARSIP, "r", encoding="utf-8") as f:
+                    return json.load(f)
+            except:
+                return []
+        return []
+
+    def simpan_ke_arsip(pesan_list):
+        with open(FILE_ARSIP, "w", encoding="utf-8") as f:
+            json.dump(pesan_list, f, ensure_ascii=False, indent=4)
+
+    if "messages" not in st.session_state:
+        st.session_state.messages = muat_arsip_chat()
+
+    # TOMBOL RESET KUSTOM (Teks Hitam)
+    col_reset, _ = st.columns([2, 2])
+    with col_reset:
+        if st.button("🗑️ Reset & Hapus Semua Arsip", key="custom_reset_btn"):
+            if os.path.exists(FILE_ARSIP):
+                os.remove(FILE_ARSIP)
+            st.session_state.messages = []
+            st.rerun()
+
+    # 5. RENDER UTAMA HISTORI CHAT
+    for msg in st.session_state.messages:
+        if msg["role"] == "user":
+            st.html(f'<div class="chat-container-block align-user"><div class="user-name-tag">Tuan Gigs 👨‍💻</div><div class="iphone-user">{msg["content"]}</div></div>')
+        elif msg["role"] == "assistant":
+            st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI • By Zayn</div><div class="iphone-ai">')
+            st.markdown(msg["content"])
+            st.html('</div></div>')
+
+    # INPUT FIELD CHAT UTAMA
+    if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
+        st.html(f'<div class="chat-container-block align-user"><div class="user-name-tag">Tuan Gigs 👨‍💻</div><div class="iphone-user">{user_input}</div></div>')
         
-        loading_placeholder.empty()
+        if len(st.session_state.messages) == 0:
+            system_instruction = (
+                "You are oXy AI, created by -Oxy-. Rules for language: "
+                "1. Look at the user's very first message. If the first message is in English, reply in English. "
+                "2. If the first message is in Indonesian or any other language, you MUST strictly reply and continue the whole conversation in Indonesian only. "
+                "Act like a cool Gen Z assistant, helpful, smart, and adaptive."
+            )
+            st.session_state.messages.append({"role": "system", "content": system_instruction})
+            
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        simpan_ke_arsip(st.session_state.messages)
         
-        st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI • By Zayn</div><div class="iphone-ai">')
-        placeholder = st.empty()
-        displayed_text = ""
-        for word in full_response.split(" "):
-            displayed_text += word + " "
-            placeholder.markdown(displayed_text + "▌")
-            time.sleep(0.03)
-        placeholder.markdown(full_response)
+        # LOADING GELOMBANG GEMINI
+        st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI Memikirkan Jawaban...</div><div class="iphone-ai" style="background: rgba(255,255,255,0.1) !important;">')
+        loading_placeholder = st.empty()
+        loading_placeholder.html("""
+            <div class="gemini-loading-box">
+                <div class="gemini-wave w-1"></div>
+                <div class="gemini-wave w-2"></div>
+                <div class="gemini-wave w-3"></div>
+            </div>
+        """)
         st.html('</div></div>')
         
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
-        simpan_ke_arsip(st.session_state.messages)
-        st.rerun()
-        
-    except Exception as e:
-        loading_placeholder.empty()
-        st.error(f"Waduh Tuan, ada kendala pada server OpenRouter: {e}")
-        
+        try:
+            response = client.chat.completions.create(
+                model="openrouter/free",
+                messages=st.session_state.messages
+            )
+            full_response = response.choices[0].message.content
+            
+            loading_placeholder.empty()
+            
+            st.html('<div class="chat-container-block align-ai"><div class="ai-name-tag">🤖 oXy AI • By Zayn</div><div class="iphone-ai">')
+            placeholder = st.empty()
+            displayed_text = ""
+            for word in full_response.split(" "):
+                displayed_text += word + " "
+                placeholder.markdown(displayed_text + "▌")
+                time.sleep(0.03)
+            placeholder.markdown(full_response)
+            st.html('</div></div>')
+            
+            st.session_state.messages.append({"role": "assistant", "content": full_response})
+            simpan_ke_arsip(st.session_state.messages)
+            st.rerun()
+            
+        except Exception as e:
+            loading_placeholder.empty()
+            st.error(f"Waduh Tuan, ada kendala pada server OpenRouter: {e}")
+            
