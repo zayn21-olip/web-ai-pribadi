@@ -2,50 +2,62 @@ import streamlit as st
 from google import genai
 
 # 1. Konfigurasi tampilan halaman Web AI
-st.set_page_config(page_title="cvAI4 Assistant", page_icon="👾", layout="centered")
+st.set_page_config(page_title="cvAI4 Assistant", page_icon="💧", layout="centered")
 
-# 2. SUNTIKAN KODE CSS UNTUK MERUBAH TAMPILAN JADI TAMPAN ✨
+# 2. SUNTIKAN KODE CSS UNTUK EFEK LIQUID GLASS BIRU 💎
 st.markdown("""
 <style>
-    /* Mengubah warna latar belakang utama (Dark Space Theme) */
+    /* Mengubah warna latar belakang utama (Deep Liquid Blue Theme) */
     .stApp {
-        background: linear-gradient(135deg, #0b0914 0%, #110e25 100%);
-        color: #f4f0ff;
+        background: linear-gradient(135deg, #02011a 0%, #050c2d 100%);
+        color: #ffffff;
     }
     
-    /* Mempercantik kotak input chat di bagian bawah */
+    /* EFEK LIQUID GLASS PADA BALON CHAT 💧 */
+    .stChatMessage {
+        border-radius: 20px !important;
+        margin-bottom: 15px !important;
+        background-color: rgba(0, 160, 255, 0.05) !important;
+        backdrop-filter: blur(10px) !important;
+        -webkit-backdrop-filter: blur(10px) !important;
+        border: 1px solid rgba(255, 255, 255, 0.1) !important;
+        box-shadow: 0 4px 15px rgba(0, 160, 255, 0.1) !important;
+        overflow: hidden !important;
+    }
+
+    /* Gradient kilau kaca di balon chat assistant */
+    .stChatMessage:nth-child(even) {
+        background: linear-gradient(135deg, rgba(0, 160, 255, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%) !important;
+        border: 1px solid rgba(0, 160, 255, 0.2) !important;
+    }
+
+    /* EFEK LIQUID GLASS PADA KOTAK INPUT 🧊 */
     .stChatInputContainer {
         border-radius: 25px !important;
-        border: 2px solid #7f5af0 !important;
-        background-color: #161426 !important;
-        box-shadow: 0 4px 15px rgba(127, 90, 240, 0.2);
-    }
-    
-    /* Memberikan efek neon pada judul utama */
-    h1 {
-        color: #a78bfa !important;
-        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-        font-weight: 800 !important;
-        text-shadow: 0px 0px 15px rgba(167, 139, 250, 0.6);
-        letter-spacing: 1px;
-    }
-    
-    /* Mengubah dekorasi teks caption */
-    .stCaption {
-        color: #94a3b8 !important;
-        font-style: italic;
+        border: 2px solid rgba(0, 160, 255, 0.5) !important;
+        background-color: rgba(22, 20, 38, 0.7) !important;
+        backdrop-filter: blur(5px) !important;
+        -webkit-backdrop-filter: blur(5px) !important;
+        box-shadow: 0 4px 15px rgba(0, 160, 255, 0.2) !important;
+        background-image: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0) 100%) !important;
     }
     
     /* Mempercantik tampilan block teks markdown di dalam chat */
     .stMarkdown p {
         font-size: 16px !important;
         line-height: 1.6 !important;
+        color: #ffffff !important;
+    }
+    
+    /* Warna teks di input container agar tetap terbaca */
+    .stChatInputContainer input {
+        color: #ffffff !important;
     }
 </style>
 """, unsafe_allow_html=True)
 
 # 3. Judul Utama Aplikasi dengan Identitas Anda
-st.title("👾 cvAI4 Assistant")
+st.title("👾 cvAI4 Assistant • By Zayn")
 st.caption("Lab cvAI4 Aktif • Created by -Oxy-")
 
 # Mengambil API Key dengan aman dari fitur rahasia (Secrets) Streamlit
@@ -62,16 +74,16 @@ client = genai.Client(api_key=api_key)
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Menampilkan riwayat chat yang sudah ada di layar dengan Avatar Keren
+# Menampilkan riwayat chat yang sudah ada di layar dengan Avatar Keren (Biru)
 for message in st.session_state.messages:
-    avatar_icon = "🧑‍💻" if message["role"] == "user" else "🤖"
+    avatar_icon = "👨‍💻" if message["role"] == "user" else "🤖"
     with st.chat_message(message["role"], avatar=avatar_icon):
         st.markdown(message["content"])
 
 # Kotak input obrolan untuk pengguna
-if user_input := st.chat_input("Ketik pesan Anda di sini, Tuan..."):
+if user_input := st.chat_input("Ketik pesan Anda di sini, Tuan Zayn..."):
     # Tampilkan pesan pengguna di layar
-    with st.chat_message("user", avatar="🧑‍💻"):
+    with st.chat_message("user", avatar="👨‍💻"):
         st.markdown(user_input)
         
     # Simpan pesan ke riwayat memori
@@ -97,4 +109,4 @@ if user_input := st.chat_input("Ketik pesan Anda di sini, Tuan..."):
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
             st.error(f"Gagal mengambil respons dari AI: {e}")
-            
+    
