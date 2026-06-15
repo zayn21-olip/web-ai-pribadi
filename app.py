@@ -252,19 +252,22 @@ if not st.session_state.sudah_masuk:
     </div>
     """)
 
-# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA (KONEKSI DEEPSEEK)
+# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA (KONEKSI OPENROUTER)
 else:
     st.markdown('<div class="cyber-core-container" style="margin-top:2%;"><div class="cyber-core" style="width:70px; height:70px; box-shadow: 0 0 25px rgba(168,85,247,0.4);"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title" style="font-size: 1.8rem !important;">oXy AI Core</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Powered by DeepSeek • Lab Active</p>', unsafe_allow_html=True)
+    st.markdown('<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Powered by OpenRouter • Lab Active</p>', unsafe_allow_html=True)
 
-    # Membaca token DeepSeek dari secrets secara otomatis
-    deepseek_key = st.secrets.get("DEEPSEEK_API_KEY")
-    if not deepseek_key:
-        st.error("⚠️ Token DEEPSEEK_API_KEY belum dikonfigurasi di dashboard Streamlit Secrets.")
+    # Membaca token OpenRouter dari secrets
+    openrouter_key = st.secrets.get("OPENROUTER_API_KEY")
+    if not openrouter_key:
+        st.error("⚠️ Token OPENROUTER_API_KEY tidak ditemukan di dashboard Streamlit Secrets.")
         st.stop()
 
-    client = OpenAI(base_url="https://api.deepseek.com", api_key=deepseek_key)
+    client = OpenAI(
+        base_url="https://openrouter.ai/api/v1",
+        api_key=openrouter_key
+    )
     FILE_ARSIP = "arsip_chat.json"
 
     if "messages" not in st.session_state:
@@ -305,8 +308,9 @@ else:
             json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             
         try:
+            # Menggunakan model gratis bawaan OpenRouter (bisa diganti sesuai model free pilihan Tuan)
             response = client.chat.completions.create(
-                model="deepseek-chat", 
+                model="openrouter/auto", 
                 messages=st.session_state.messages,
                 stream=False
             )
@@ -321,5 +325,5 @@ else:
                 json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             st.rerun()
         except Exception as e:
-            st.error(f"Gagal mengambil respons DeepSeek Core: {e}")
-    
+            st.error(f"Gagal mengambil respons OpenRouter: {e}")
+        
