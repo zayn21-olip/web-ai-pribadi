@@ -6,9 +6,9 @@ import os
 import json
 
 # 1. Konfigurasi Halaman Utama
-st.set_page_config(page_title="oXy AI • Core", page_icon="🔮", layout="centered")
+st.set_page_config(page_title="oXy AI • Core", page_icon="🌐", layout="centered")
 
-# 2. INJEKSI CSS STRUKTUR: DEEP PURPLE CYBER INTERFACE
+# 2. INJEKSI CSS STRUKTUR: DEEP PURPLE CYBER INTERFACE & PLANET BUMI CAIRAN KACA 3D
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght=400;500;600;800&display=swap');
@@ -19,42 +19,76 @@ st.markdown("""
 
     /* Background Deep Nebula */
     .stApp {
-        background: radial-gradient(circle at 50% 15%, #18102c 0%, #090612 70%, #040308 100%) !important;
+        background: radial-gradient(circle at 50% 15%, #0e0a21 0%, #06040d 70%, #020105 100%) !important;
         color: #e2dcf0 !important;
         overflow-x: hidden;
     }
     header[data-testid="stHeader"] { background: transparent !important; }
     footer { visibility: hidden !important; }
 
-    /* 🔮 ANIMATED ORB UTAMA */
+    /* 🌐 ANIMATED CYBER EARTH PLANET (BIRU MUDA + LIQUID GLASS PUTIH HD) */
     .cyber-core-container {
         display: flex;
         justify-content: center;
         align-items: center;
         margin-top: 5%;
-        margin-bottom: 15px;
+        margin-bottom: 25px;
     }
-    .cyber-core {
+    
+    .cyber-planet {
         width: 140px;
         height: 140px;
         border-radius: 50%;
-        background: radial-gradient(circle, #a855f7 0%, #6b21a8 40%, #1e1b4b 80%, transparent 100%);
-        border: 2px solid rgba(168, 85, 247, 0.4);
-        box-shadow: 0 0 45px rgba(168, 85, 247, 0.6);
         position: relative;
-        animation: pulseCore 3s infinite ease-in-out;
+        /* Tekstur Dasar: Biru muda dengan lapisan liquid glass putih */
+        background: radial-gradient(circle at 30% 30%, #ffffff 0%, #a5f3fc 25%, #38bdf8 60%, #0369a1 100%);
+        box-shadow: 
+            0 0 20px rgba(56, 189, 248, 0.4),
+            0 0 50px rgba(14, 165, 233, 0.6),
+            inset -10px -10px 30px rgba(3, 105, 161, 0.7),
+            inset 15px 15px 25px rgba(255, 255, 255, 0.9);
+        overflow: hidden;
+        animation: rotatePlanet 12s linear infinite;
     }
-    .cyber-core::after {
+
+    /* Efek Lubang-Lubang Kawah & Kontur Lapisan Kaca Bumi */
+    .cyber-planet::before {
         content: '';
         position: absolute;
-        top: 25%; left: 25%; width: 50%; height: 50%;
-        border-radius: 50%;
-        background: radial-gradient(circle, #ffffff 0%, #d8b4fe 50%, transparent 100%);
-        filter: blur(2px);
+        width: 200%;
+        height: 100%;
+        background-image: 
+            /* Pola lubang-lubang bulat transparan/kawah */
+            radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.4) 8%, transparent 9%),
+            radial-gradient(circle at 35% 70%, rgba(2, 132, 199, 0.5) 12%, transparent 13%),
+            radial-gradient(circle at 60% 40%, rgba(255, 255, 255, 0.5) 6%, transparent 7%),
+            radial-gradient(circle at 75% 75%, rgba(2, 132, 199, 0.4) 10%, transparent 11%),
+            radial-gradient(circle at 90% 25%, rgba(255, 255, 255, 0.3) 14%, transparent 15%),
+            /* Aliran Liquid Glass Putih */
+            linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.2) 20%, rgba(255,255,255,0.6) 40%, transparent 60%);
+        background-size: 50% 100%;
+        animation: moveClouds 6s linear infinite;
     }
-    @keyframes pulseCore {
-        0%, 100% { transform: scale(1); box-shadow: 0 0 45px rgba(168, 85, 247, 0.6); }
-        50% { transform: scale(1.04); box-shadow: 0 0 60px rgba(168, 85, 247, 0.8); }
+
+    /* Efek Atmosfer Kaca Glossy Mengkilap diluar Planet */
+    .cyber-planet::after {
+        content: '';
+        position: absolute;
+        top: 0; left: 0; width: 100%; height: 100%;
+        border-radius: 50%;
+        background: linear-gradient(135deg, rgba(255,255,255,0.5) 0%, transparent 50%, rgba(0,0,0,0.3) 100%);
+        pointer-events: none;
+    }
+
+    @keyframes rotatePlanet {
+        0% { transform: rotate(0deg); box-shadow: 0 0 40px rgba(56, 189, 248, 0.5); }
+        50% { box-shadow: 0 0 55px rgba(14, 165, 233, 0.7); }
+        100% { transform: rotate(360deg); box-shadow: 0 0 40px rgba(56, 189, 248, 0.5); }
+    }
+
+    @keyframes moveClouds {
+        0% { background-position: 0px 0px; }
+        100% { background-position: 140px 0px; }
     }
 
     /* TEKS UTAMA BRANDING */
@@ -62,7 +96,7 @@ st.markdown("""
         text-align: center;
         font-weight: 800 !important;
         font-size: 2.8rem !important;
-        background: linear-gradient(to right, #ffffff 40%, #d8b4fe 70%, #a855f7 100%);
+        background: linear-gradient(to right, #ffffff 40%, #bae6fd 70%, #38bdf8 100%);
         -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent !important;
     }
@@ -73,43 +107,43 @@ st.markdown("""
         margin-bottom: 30px !important;
     }
 
-    /* 📱 KARTU BANNER PERTAMA */
+    /* 📱 KARTU BANNER PERTAMA - PERBAIKAN: HALO SAYA oXy */
     .welcome-card-cyber {
-        background: rgba(25, 18, 46, 0.6) !important;
+        background: rgba(15, 23, 42, 0.5) !important;
         border-radius: 28px !important;
-        border: 1px solid rgba(168, 85, 247, 0.25) !important;
+        border: 1px solid rgba(56, 189, 248, 0.25) !important;
         backdrop-filter: blur(25px);
         -webkit-backdrop-filter: blur(25px);
         padding: 40px 30px;
         text-align: center;
         margin: 20px auto;
         max-width: 500px;
-        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
     }
     .welcome-h1 { 
         font-size: 2.2rem !important; 
         font-weight: 800 !important; 
-        color: #d8b4fe !important; 
+        color: #38bdf8 !important; 
         margin-bottom: 20px;
         letter-spacing: -0.5px;
     }
     .welcome-p { 
         font-size: 1.1rem; 
-        color: #c7d2fe; 
+        color: #e2e8f0; 
         line-height: 1.7; 
         font-weight: 500;
     }
 
     /* BUTTON TO ENTER CORE */
     div[data-testid="stElementContainer"] button[key="enter_cyber_btn"] {
-        background: #8b5cf6 !important;
+        background: #0284c7 !important;
         color: #ffffff !important;
         font-weight: 700 !important;
         font-size: 16px !important;
         padding: 14px 40px !important;
         border-radius: 50px !important;
         border: none !important;
-        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5) !important;
+        box-shadow: 0 8px 25px rgba(14, 165, 233, 0.4) !important;
     }
 
     /* 🏷️ SEKSI TENTANG SAYA DI BAGIAN BAWAH */
@@ -121,20 +155,20 @@ st.markdown("""
     .about-title {
         font-size: 2rem !important;
         font-weight: 800 !important;
-        color: #d8b4fe !important;
+        color: #38bdf8 !important;
         margin-bottom: 30px;
     }
     .about-profile-circle {
         width: 160px;
         height: 160px;
         border-radius: 50%;
-        border: 2px solid #8b5cf6;
-        box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+        border: 2px solid #0284c7;
+        box-shadow: 0 0 30px rgba(56, 189, 248, 0.3);
         margin: 0 auto 25px auto;
         display: flex;
         justify-content: center;
         align-items: center;
-        background: rgba(13, 9, 24, 0.6);
+        background: rgba(15, 23, 42, 0.6);
     }
     .about-profile-text {
         font-size: 1.1rem;
@@ -158,51 +192,51 @@ st.markdown("""
         margin-bottom: 15px;
     }
     .about-highlight {
-        color: #c084fc !important;
+        color: #7dd3fc !important;
         font-weight: 600;
     }
 
     /* CHAT CORE LAYOUT & GELEMBUNG INPUT */
     div[data-testid="stChatInputContainer"] > div {
         border-radius: 30px !important;
-        border: 1px solid rgba(168, 85, 247, 0.35) !important;
-        background: rgba(13, 9, 24, 0.85) !important;
+        border: 1px solid rgba(56, 189, 248, 0.35) !important;
+        background: rgba(10, 15, 30, 0.9) !important;
         backdrop-filter: blur(20px) !important;
         padding: 6px 14px !important;
     }
     
     /* 💬 Gelembung User */
     .cyber-user-bubble {
-        background: rgba(43, 29, 74, 0.4) !important;
-        color: #f1f0f5 !important;
+        background: rgba(14, 165, 233, 0.25) !important;
+        color: #f8fafc !important;
         padding: 13px 22px !important;
         border-radius: 20px 20px 4px 20px !important;
-        border: 1px solid rgba(168, 85, 247, 0.25) !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
         max-width: 85% !important;
     }
     
     /* 🔮 Gelembung AI */
     .cyber-ai-bubble-box {
-        background: rgba(25, 18, 46, 0.5) !important;
-        border: 1px solid rgba(168, 85, 247, 0.2) !important;
+        background: rgba(15, 23, 42, 0.6) !important;
+        border: 1px solid rgba(56, 189, 248, 0.2) !important;
         border-radius: 4px 20px 20px 20px !important;
         padding: 18px 22px !important;
         margin-bottom: 25px !important;
         max-width: 85% !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
     }
     
     .ai-header-inline { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
     .ai-mini-orb {
         width: 18px; height: 18px; border-radius: 50%;
-        background: radial-gradient(circle, #c084fc 0%, #6b21a8 70%);
-        border: 1px solid rgba(168, 85, 247, 0.5);
+        background: radial-gradient(circle, #ffffff 0%, #38bdf8 60%, #0284c7 100%);
+        border: 1px solid rgba(56, 189, 248, 0.5);
     }
-    .cyber-ai-content-flow { color: #dbd5ea !important; line-height: 1.7 !important; }
+    .cyber-ai-content-flow { color: #e2e8f0 !important; line-height: 1.7 !important; }
     
     div[data-testid="stMarkdownContainer"] pre {
-        background-color: #06040a !important;
-        border: 1px solid rgba(168, 85, 247, 0.35) !important;
+        background-color: #020617 !important;
+        border: 1px solid rgba(56, 189, 248, 0.3) !important;
         border-radius: 16px !important;
     }
 
@@ -216,12 +250,12 @@ st.markdown("""
     .typing-dot {
         width: 8px;
         height: 8px;
-        background-color: #a855f7;
+        background-color: #38bdf8;
         border-radius: 50%;
         animation: cyberBlink 1.4s infinite both;
     }
-    .typing-dot:nth-child(2) { animation-delay: .2s; background-color: #c084fc; }
-    .typing-dot:nth-child(3) { animation-delay: .4s; background-color: #d8b4fe; }
+    .typing-dot:nth-child(2) { animation-delay: .2s; background-color: #7dd3fc; }
+    .typing-dot:nth-child(3) { animation-delay: .4s; background-color: #bae6fd; }
 
     @keyframes cyberBlink {
         0%, 100% { transform: scale(0.8); opacity: 0.4; }
@@ -259,30 +293,30 @@ components.html("""
 if "sudah_masuk" not in st.session_state:
     st.session_state.sudah_masuk = False
 
-# 🏠 HALAMAN 1: WELCOME SCREEN (NAMA AMAN FIX ZAYN & oXy AI)
+# 🏠 HALAMAN 1: WELCOME SCREEN (BUMI CYBER BERPUTAR + HALO SAYA oXy)
 if not st.session_state.sudah_masuk:
-    st.markdown('<div class="cyber-core-container"><div class="cyber-core"></div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="cyber-core-container"><div class="cyber-planet"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title">oXy AI</h1>', unsafe_allow_html=True)
     st.markdown('<p class="oxy-sub">Apa yang bisa saya bantu?</p>', unsafe_allow_html=True)
     
     st.html("""
     <div class="welcome-card-cyber">
-        <div class="welcome-h1">Halo, Saya Zayn</div>
+        <div class="welcome-h1">Halo, Saya oXy</div>
         <div class="welcome-p">
-            Seorang <strong>Pengembang Perangkat Lunak</strong> yang bersemangat menciptakan solusi inovatif.
+            Seorang <strong>Asisten Kecerdasan Buatan</strong> yang siap membantumu kapan saja.
         </div>
     </div>
     """)
     
     _, col_btn, _ = st.columns([1, 2, 1])
     with col_btn:
-        if st.button("Lihat Proyek Saya 🔮", key="enter_cyber_btn", use_container_width=True):
+        if st.button("Masuk ke Core Core 🔮", key="enter_cyber_btn", use_container_width=True):
             st.session_state.sudah_masuk = True
             st.rerun()
             
     st.html("""
     <div class="about-section-container">
-        <div class="about-title">Tentang Saya</div>
+        <div class="about-title">Tentang Kreator</div>
         <div class="about-profile-circle">
             <div class="about-profile-text">Zayn Profile</div>
         </div>
@@ -296,9 +330,9 @@ if not st.session_state.sudah_masuk:
 
 # 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA (GRATIS & STABLE)
 else:
-    st.markdown('<div class="cyber-core-container" style="margin-top:2%;"><div class="cyber-core" style="width:70px; height:70px; box-shadow: 0 0 25px rgba(168,85,247,0.4);"></div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="cyber-core-container" style="margin-top:2%;"><div class="cyber-planet" style="width:70px; height:70px; box-shadow: 0 0 25px rgba(56,189,248,0.5);"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title" style="font-size: 1.8rem !important;">oXy AI Core</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Powered by OpenRouter • Lab Active</p>', unsafe_allow_html=True)
+    st.markdown('<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Created by Zayn • Powered by OpenRouter</p>', unsafe_allow_html=True)
 
     openrouter_key = st.secrets.get("OPENROUTER_API_KEY")
     if not openrouter_key:
@@ -341,7 +375,7 @@ else:
         if len(st.session_state.messages) == 0:
             st.session_state.messages.append({
                 "role": "system", 
-                "content": "You are oXy AI, a highly advanced artificial intelligence developed by Zayn. Always assist Tuan Gigs professionally and use code blocks when delivering scripts."
+                "content": "You are oXy AI, a highly advanced artificial intelligence developed by Zayn. Always assist users professionally and use code blocks when delivering scripts."
             })
             
         st.session_state.messages.append({"role": "user", "content": user_input})
@@ -396,4 +430,4 @@ else:
         except Exception as e:
             placeholder_loading.empty()
             st.error(f"Gagal mengambil respons OpenRouter: {e}")
-                          
+    
