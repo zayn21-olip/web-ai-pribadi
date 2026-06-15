@@ -6,9 +6,9 @@ import os
 import json
 
 # 1. Konfigurasi Halaman Utama
-st.set_page_config(page_title="oXy AI • Core", page_icon="💧", layout="centered")
+st.set_page_config(page_title="oXy AI • Core", page_icon="🔮", layout="centered")
 
-# 2. INJEKSI CSS STRUKTUR: CYBERPUNK DEEP PURPLE INTERFACE
+# 2. INJEKSI CSS STRUKTUR: DEEP PURPLE CYBER INTERFACE
 st.markdown("""
 <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;800&display=swap');
@@ -17,7 +17,7 @@ st.markdown("""
         font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif !important;
     }
 
-    /* Latar Belakang Gradasi Radial Ungu Gelap Sesuai Screenshot */
+    /* Background Deep Nebula */
     .stApp {
         background: radial-gradient(circle at 50% 15%, #18102c 0%, #090612 70%, #040308 100%) !important;
         color: #e2dcf0 !important;
@@ -26,7 +26,7 @@ st.markdown("""
     header[data-testid="stHeader"] { background: transparent !important; }
     footer { visibility: hidden !important; }
 
-    /* 🔮 ORB CYBER CORE BULAT BERGERAK/BERDENYUT (ANIMATED ORB) */
+    /* 🔮 ANIMATED ORB UTAMA */
     .cyber-core-container {
         display: flex;
         justify-content: center;
@@ -35,13 +35,12 @@ st.markdown("""
         margin-bottom: 15px;
     }
     .cyber-core {
-        width: 130px;
-        height: 130px;
+        width: 140px;
+        height: 140px;
         border-radius: 50%;
         background: radial-gradient(circle, #a855f7 0%, #6b21a8 40%, #1e1b4b 80%, transparent 100%);
         border: 2px solid rgba(168, 85, 247, 0.4);
-        box-shadow: 0 0 40px rgba(168, 85, 247, 0.5),
-                    inset 0 0 25px rgba(168, 85, 247, 0.4);
+        box-shadow: 0 0 45px rgba(168, 85, 247, 0.6);
         position: relative;
         animation: pulseCore 3s infinite ease-in-out;
     }
@@ -54,134 +53,151 @@ st.markdown("""
         filter: blur(2px);
     }
     @keyframes pulseCore {
-        0%, 100% { transform: scale(1); box-shadow: 0 0 35px rgba(168, 85, 247, 0.5); }
-        50% { transform: scale(1.05); box-shadow: 0 0 55px rgba(168, 85, 247, 0.7), 0 0 20px rgba(139, 92, 246, 0.3); }
+        0%, 100% { transform: scale(1); box-shadow: 0 0 45px rgba(168, 85, 247, 0.6); }
+        50% { transform: scale(1.04); box-shadow: 0 0 60px rgba(168, 85, 247, 0.8); }
     }
 
-    /* 🎯 SEKSI BRANDING TEKS GRADASI */
+    /* TEKS UTAMA BRANDING */
     .oxy-title {
         text-align: center;
         font-weight: 800 !important;
-        font-size: 2.6rem !important;
+        font-size: 2.8rem !important;
         background: linear-gradient(to right, #ffffff 40%, #d8b4fe 70%, #a855f7 100%);
         -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent !important;
-        margin-bottom: 2px !important;
     }
-    .creator-tag {
+    .oxy-sub {
         text-align: center;
-        color: #c084fc !important;
-        font-size: 0.85rem;
-        font-weight: 600;
-        margin-bottom: 35px !important;
-        letter-spacing: 2px;
-        text-transform: uppercase;
-        opacity: 0.9;
+        color: #94a3b8 !important;
+        font-size: 1.1rem;
+        margin-bottom: 30px !important;
     }
 
-    /* WELCOME CARD ELEMEN */
+    /* 📱 KARTU BANNER PERTAMA */
     .welcome-card-cyber {
-        background: rgba(20, 13, 38, 0.5) !important;
-        border-radius: 24px !important;
-        border: 1px solid rgba(168, 85, 247, 0.2) !important;
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        padding: 35px 25px;
+        background: rgba(25, 18, 46, 0.6) !important;
+        border-radius: 28px !important;
+        border: 1px solid rgba(168, 85, 247, 0.25) !important;
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        padding: 40px 30px;
         text-align: center;
         margin: 20px auto;
         max-width: 500px;
+        box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
     }
-    .welcome-h1 { font-size: 1.7rem !important; font-weight: 800 !important; color: #e9d5ff !important; margin-bottom: 15px; }
-    .welcome-p { font-size: 0.98rem; color: #94a3b8; line-height: 1.6; }
+    .welcome-h1 { 
+        font-size: 2.2rem !important; 
+        font-weight: 800 !important; 
+        color: #d8b4fe !important; 
+        margin-bottom: 20px;
+        letter-spacing: -0.5px;
+    }
+    .welcome-p { 
+        font-size: 1.1rem; 
+        color: #c7d2fe; 
+        line-height: 1.7; 
+        font-weight: 500;
+    }
+    .welcome-p strong {
+        color: #f3e8ff !important;
+        font-weight: 700;
+    }
 
-    /* BUTTON MANAGEMENT */
+    /* BUTTON TO ENTER CORE */
     div[data-testid="stElementContainer"] button[key="enter_cyber_btn"] {
-        background: #7c3aed !important;
+        background: #8b5cf6 !important;
         color: #ffffff !important;
         font-weight: 700 !important;
-        font-size: 15px !important;
-        padding: 12px 35px !important;
+        font-size: 16px !important;
+        padding: 14px 40px !important;
         border-radius: 50px !important;
         border: none !important;
-        box-shadow: 0 8px 20px rgba(124, 58, 237, 0.4) !important;
-    }
-    div[data-testid="stColumn"] button {
-        color: #ffffff !important;
-        background-color: rgba(255,255,255,0.03) !important;
-        border: 1px solid rgba(168, 85, 247, 0.2) !important;
-        border-radius: 12px !important;
+        box-shadow: 0 8px 25px rgba(139, 92, 246, 0.5) !important;
     }
 
-    /* INPUT FIELD UTAMA BENTUK KAPSUL LONJONG */
-    div[data-testid="stBottom"],
-    div[data-testid="stBottomBlockContainer"],
-    div[data-testid="stChatInputContainer"],
-    .stChatInput,
-    form {
-        background-color: transparent !important;
-        background: transparent !important;
-        border: none !important;
-        box-shadow: none !important;
+    /* 🏷️ SEKSI TENTANG SAYA DI BAGIAN BAWAH */
+    .about-section-container {
+        text-align: center;
+        margin-top: 60px;
+        margin-bottom: 20px;
     }
+    .about-title {
+        font-size: 2rem !important;
+        font-weight: 800 !important;
+        color: #d8b4fe !important;
+        margin-bottom: 30px;
+    }
+    .about-profile-circle {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        border: 2px solid #8b5cf6;
+        box-shadow: 0 0 30px rgba(139, 92, 246, 0.4);
+        margin: 0 auto 25px auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: rgba(13, 9, 24, 0.6);
+    }
+    .about-profile-text {
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #ffffff;
+        opacity: 0.9;
+        letter-spacing: 1px;
+    }
+    
+    /* Deskripsi Penjelasan oXy AI */
+    .about-description-box {
+        max-width: 500px;
+        margin: 0 auto 60px auto;
+        padding: 0 20px;
+        text-align: center;
+    }
+    .about-text-p {
+        font-size: 1rem;
+        color: #94a3b8;
+        line-height: 1.7;
+        margin-bottom: 15px;
+    }
+    .about-highlight {
+        color: #c084fc !important;
+        font-weight: 600;
+    }
+
+    /* CHAT CORE LAYOUT & INPUT */
     div[data-testid="stChatInputContainer"] > div {
         border-radius: 30px !important;
         border: 1px solid rgba(168, 85, 247, 0.35) !important;
         background: rgba(13, 9, 24, 0.85) !important;
         backdrop-filter: blur(20px) !important;
-        -webkit-backdrop-filter: blur(20px) !important;
-        box-shadow: 0 10px 35px rgba(0, 0, 0, 0.7) !important;
         padding: 6px 14px !important;
     }
-    .stChatInputContainer textarea { color: #ffffff !important; background-color: transparent !important; }
-
-    /* BALON USER GLASS TRANSPARAN */
-    .chat-container-block { display: flex !important; flex-direction: column !important; width: 100% !important; margin-bottom: 26px !important; }
-    .align-user { align-items: flex-end !important; }
-    .align-ai { align-items: flex-start !important; }
-
     .cyber-user-bubble {
         background: rgba(43, 29, 74, 0.4) !important;
         color: #f1f0f5 !important;
         padding: 13px 22px !important;
         border-radius: 20px !important;
-        max-width: 85% !important;
         border: 1px solid rgba(168, 85, 247, 0.25) !important;
-        box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2) !important;
+        max-width: 85% !important;
     }
-
-    /* RESPONSIVE CHAT FLOW ALIRAN AI */
-    .ai-header-inline { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; margin-left: 4px; }
+    .ai-header-inline { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
     .ai-mini-orb {
         width: 20px; height: 20px; border-radius: 50%;
         background: radial-gradient(circle, #c084fc 0%, #6b21a8 70%);
         border: 1px solid rgba(168, 85, 247, 0.5);
-        box-shadow: 0 0 10px rgba(168, 85, 247, 0.7);
     }
-    .ai-name-tag-inline { font-size: 1.05rem !important; color: #ffffff !important; font-weight: 700 !important; }
     .cyber-ai-content-flow { width: 100% !important; padding-left: 32px !important; color: #dbd5ea !important; line-height: 1.7 !important; }
-
-    /* PREMIUM CODE BLOCK LOG MATRIX */
-    div[data-testid="stMarkdownContainer"] pre, .stMarkdown pre {
+    div[data-testid="stMarkdownContainer"] pre {
         background-color: #06040a !important;
         border: 1px solid rgba(168, 85, 247, 0.35) !important;
         border-radius: 16px !important;
-        padding: 16px !important;
-        box-shadow: 0 12px 30px rgba(0, 0, 0, 0.8) !important;
     }
-    div[data-testid="stMarkdownContainer"] code, .stMarkdown code {
-        color: #d8b4fe !important;
-        font-family: 'Courier New', Courier, monospace !important;
-    }
-
-    /* LOADING ANIMATION EMBED */
-    .cyber-loading-box { display: flex; flex-direction: column; gap: 8px; width: 60%; padding-left: 32px; }
-    .cyber-wave { height: 9px; background: linear-gradient(90deg, #3b1754 25%, #a855f7 50%, #3b1754 75%); background-size: 200% 100%; animation: cyberWaveAnim 1.2s infinite linear; border-radius: 5px; }
-    .w-1 { width: 35%; } .w-2 { width: 80%; } .w-3 { width: 55%; }
-    @keyframes cyberWaveAnim { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
 </style>
 """, unsafe_allow_html=True)
 
-# 3. JAVASCRIPT FIXED FOR FLOATING LAYERS
+# 3. FIX OVERLAY INTERFACE JAVASCRIPT
 components.html("""
 <script>
     function fixInputStyle() {
@@ -197,60 +213,75 @@ components.html("""
 </script>
 """, height=0, width=0)
 
-# ================= APP LIFECYCLE MANAGEMENT =================
+# ================= MANAJEMEN HALAMAN APP =================
 if "sudah_masuk" not in st.session_state:
     st.session_state.sudah_masuk = False
 
-# HALAMAN 1: WELCOME INITIAL SCREEN
+# 🏠 HALAMAN 1: WELCOME SCREEN (Sesuai Struktur Gambar + Penjelasan Tambahan)
 if not st.session_state.sudah_masuk:
+    # Orb Berputar di atas
     st.markdown('<div class="cyber-core-container"><div class="cyber-core"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title">oXy AI</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="creator-tag">CREATED BY ZAYN</p>', unsafe_allow_html=True)
+    st.markdown('<p class="oxy-sub">Apa yang bisa saya bantu?</p>', unsafe_allow_html=True)
     
+    # KARTU UTAMA
     st.html("""
     <div class="welcome-card-cyber">
-        <div class="welcome-h1">Halo, Saya oXy AI</div>
+        <div class="welcome-h1">Halo, Saya oXy</div>
         <div class="welcome-p">
-            Asisten sistem kecerdasan buatan siber buatan Zayn, dirancang khusus untuk memenuhi instruksi Tuan Gigs secara optimal.
+            Seorang <strong>Pengembang Perangkat Lunak</strong> yang bersemangat menciptakan solusi inovatif.
         </div>
     </div>
     """)
     
-    st.markdown("<br>", unsafe_allow_html=True)
+    # Tombol Aksi
     _, col_btn, _ = st.columns([1, 2, 1])
     with col_btn:
-        if st.button("Masuk Sesi Inti 💧", key="enter_cyber_btn", use_container_width=True):
+        if st.button("Lihat Proyek Saya 🔮", key="enter_cyber_btn", use_container_width=True):
             st.session_state.sudah_masuk = True
             st.rerun()
+            
+    # 🏷️ SEKSI BAWAH: "Tentang Saya" + Lingkaran Profil + Penjelasan Detail oXy AI
+    st.html("""
+    <div class="about-section-container">
+        <div class="about-title">Tentang Saya</div>
+        <div class="about-profile-circle">
+            <div class="about-profile-text">oXy Core</div>
+        </div>
+    </div>
+    <div class="about-description-box">
+        <p class="about-text-p">
+            <span class="about-highlight">oXy AI</span> adalah entitas sistem kecerdasan buatan siber mutakhir yang dirancang khusus oleh <span class="about-highlight">Zayn</span> untuk membantu mempercepat alur kerja pengembangan perangkat lunak, perakitan skrip kode, dan manajemen logika komputasi secara cerdas.
+        </p>
+        <p class="about-text-p" style="font-size: 0.95rem; color: #64748b;">
+            Beroperasi di dalam ekosistem Lab Core aktif untuk menyajikan solusi optimal bagi Tuan Gigs.
+        </p>
+    </div>
+    """)
 
-# HALAMAN 2: UTAMA CHAT PANEL (MEMPERBAIKI MASALAH KOSONG DI GAMBAR 84618.png)
+# 💬 HALAMAN 2: INTERFACE CHAT CORE UTAMA
 else:
-    # 🔮 RENDER BULATAN ORB BERGERAK DI CHAT CORE (Menghilangkan kekosongan atas)
-    st.markdown('<div class="cyber-core-container" style="margin-top:2%;"><div class="cyber-core" style="width:75px; height:75px; box-shadow: 0 0 25px rgba(168,85,247,0.45);"></div></div>', unsafe_allow_html=True)
+    st.markdown('<div class="cyber-core-container" style="margin-top:2%;"><div class="cyber-core" style="width:70px; height:70px; box-shadow: 0 0 25px rgba(168,85,247,0.4);"></div></div>', unsafe_allow_html=True)
     st.markdown('<h1 class="oxy-title" style="font-size: 1.8rem !important;">oXy AI Core</h1>', unsafe_allow_html=True)
-    st.markdown('<p class="creator-tag" style="font-size: 0.75rem; margin-bottom: 20px !important;">By Zayn • Lab System Active</p>', unsafe_allow_html=True)
+    st.markdown('<p class="oxy-sub" style="font-size: 0.85rem; margin-bottom: 20px !important;">Created by Zayn • Lab Active</p>', unsafe_allow_html=True)
 
     or_api_key = st.secrets.get("OPENROUTER_API_KEY")
     if not or_api_key:
-        st.error("⚠️ Token OPENROUTER_API_KEY tidak terdeteksi.")
+        st.error("⚠️ Token OPENROUTER_API_KEY tidak ditemukan.")
         st.stop()
 
     client = OpenAI(base_url="https://openrouter.ai/api/v1", api_key=or_api_key)
     FILE_ARSIP = "arsip_chat.json"
 
-    def muat_arsip_chat():
+    if "messages" not in st.session_state:
         if os.path.exists(FILE_ARSIP):
             try:
-                with open(FILE_ARSIP, "r", encoding="utf-8") as f: return json.load(f)
-            except: return []
-        return []
+                with open(FILE_ARSIP, "r", encoding="utf-8") as f: st.session_state.messages = json.load(f)
+            except: st.session_state.messages = []
+        else:
+            st.session_state.messages = []
 
-    def simpan_ke_arsip(pesan_list):
-        with open(FILE_ARSIP, "w", encoding="utf-8") as f: json.dump(pesan_list, f, ensure_ascii=False, indent=4)
-
-    if "messages" not in st.session_state:
-        st.session_state.messages = muat_arsip_chat()
-
+    # Tombol Reset Sesi
     col_reset, _ = st.columns([2, 2])
     with col_reset:
         if st.button("🗑️ Kosongkan Sesi oXy", key="cyber_reset"):
@@ -258,63 +289,42 @@ else:
             st.session_state.messages = []
             st.rerun()
 
-    # Log Histori Obrolan
+    # Tampilkan Histori Aliran Obrolan
     for msg in st.session_state.messages:
         if msg["role"] == "user":
-            st.html(f'<div class="chat-container-block align-user"><div class="cyber-user-bubble">{msg["content"]}</div></div>')
+            st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{msg["content"]}</div></div>')
         elif msg["role"] == "assistant":
-            st.html('<div class="chat-container-block align-ai"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div class="ai-name-tag-inline">oXy AI</div></div><div class="cyber-ai-content-flow">')
+            st.html('<div style="margin-bottom:24px;"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff;">oXy AI</div></div><div class="cyber-ai-content-flow">')
             st.markdown(msg["content"])
             st.html('</div></div>')
 
-    # Input Box Kapsul Utama
+    # Input Box Chat Kapsul
     if user_input := st.chat_input("Ask to oXy..."):
-        st.html(f'<div class="chat-container-block align-user"><div class="cyber-user-bubble">{user_input}</div></div>')
+        st.html(f'<div style="display:flex; justify-content:flex-end; margin-bottom:20px;"><div class="cyber-user-bubble">{user_input}</div></div>')
         
         if len(st.session_state.messages) == 0:
-            system_instruction = (
-                "You are oXy AI, a highly advanced artificial intelligence created by Zayn. "
-                "Always serve Tuan Gigs with maximum efficiency. Reply in Indonesian with a sharp, cool tech vibe."
-            )
-            st.session_state.messages.append({"role": "system", "content": system_instruction})
+            st.session_state.messages.append({
+                "role": "system", 
+                "content": "You are oXy AI, a highly advanced artificial intelligence developed by Zayn. Always assist Tuan Gigs professionally and use code blocks when delivering scripts."
+            })
             
         st.session_state.messages.append({"role": "user", "content": user_input})
-        simpan_ke_arsip(st.session_state.messages)
         
-        # Animasi Loading
-        st.html('<div class="chat-container-block align-ai"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div class="ai-name-tag-inline">oXy AI Merakit Data...</div></div></div>')
-        loading_placeholder = st.empty()
-        loading_placeholder.html("""
-            <div class="cyber-loading-box">
-                <div class="cyber-wave w-1"></div>
-                <div class="cyber-wave w-2"></div>
-                <div class="cyber-wave w-3"></div>
-            </div>
-        """)
-        
-        try:
-            response = client.chat.completions.create(
-                model="openrouter/free",
-                messages=st.session_state.messages
-            )
-            full_response = response.choices[0].message.content
-            loading_placeholder.empty()
+        with open(FILE_ARSIP, "w", encoding="utf-8") as f:
+            json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             
-            st.html('<div class="chat-container-block align-ai"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div class="ai-name-tag-inline">oXy AI</div></div><div class="cyber-ai-content-flow">')
-            placeholder = st.empty()
-            displayed_text = ""
-            for word in full_response.split(" "):
-                displayed_text += word + " "
-                placeholder.markdown(displayed_text + "▌")
-                time.sleep(0.015)
-            placeholder.markdown(full_response)
+        try:
+            response = client.chat.completions.create(model="openrouter/free", messages=st.session_state.messages)
+            full_response = response.choices[0].message.content
+            
+            st.html('<div style="margin-bottom:24px;"><div class="ai-header-inline"><div class="ai-mini-orb"></div><div style="font-weight:700; color:#fff;">oXy AI</div></div><div class="cyber-ai-content-flow">')
+            st.markdown(full_response)
             st.html('</div></div>')
             
             st.session_state.messages.append({"role": "assistant", "content": full_response})
-            simpan_ke_arsip(st.session_state.messages)
+            with open(FILE_ARSIP, "w", encoding="utf-8") as f:
+                json.dump(st.session_state.messages, f, ensure_ascii=False, indent=4)
             st.rerun()
-            
         except Exception as e:
-            loading_placeholder.empty()
-            st.error(f"Koneksi oXy Core Terputus: {e}")
-                
+            st.error(f"Gagal mengambil respons core: {e}")
+        
