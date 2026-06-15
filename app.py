@@ -8,7 +8,7 @@ import json
 # 1. Konfigurasi Halaman & Favicon
 st.set_page_config(page_title="oXy AI • By Zayn", page_icon="💧", layout="centered")
 
-# 2. CSS RESET, KHUSUS TOMBOL TEKS HITAM, & NEON GEMINI WAVE LOADING
+# 2. CSS RESET, FIXED TOMBOL TEXT HITAM, & NEON GEMINI WAVE LOADING
 st.markdown("""
 <style>
     .stApp {
@@ -87,7 +87,7 @@ st.markdown("""
         margin-bottom: 6px !important;
     }
 
-    /* 💧 KEMBALI KE ORIGINAL BALON CHAT USER (TEKS PUTIH ESTETIK) */
+    /* BALON CHAT USER ESTETIK */
     .iphone-user {
         background: linear-gradient(135deg, #0072ff 0%, #00c6ff 100%) !important;
         color: #ffffff !important;
@@ -99,7 +99,7 @@ st.markdown("""
     }
     .iphone-user p, .iphone-user span { color: #ffffff !important; }
 
-    /* 💧 KEMBALI KE ORIGINAL BALON CHAT AI GLASS EFFECT (TEKS PUTIH ESTETIK) */
+    /* BALON CHAT AI GLASS EFFECT (KEMBALI KE PUTIH EMAS ESTETIK) */
     .iphone-ai {
         background: linear-gradient(135deg, rgba(255, 255, 255, 0.12) 0%, rgba(255, 255, 255, 0.04) 100%) !important;
         color: #ffffff !important;
@@ -160,7 +160,7 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
-# 3. JAVASCRIPT ENGINE (Pembersih Latar Belakang)
+# 3. JAVASCRIPT ENGINE (Pembersih Background)
 components.html("""
 <script>
     function clearWhitePlates() {
@@ -207,7 +207,7 @@ def simpan_ke_arsip(pesan_list):
 if "messages" not in st.session_state:
     st.session_state.messages = muat_arsip_chat()
 
-# TOMBOL RESET KUSTOM (Ditembak pakai CSS khusus teks hitam)
+# TOMBOL RESET KUSTOM (Teks Hitam Pekat)
 col_reset, _ = st.columns([2, 2])
 with col_reset:
     if st.button("🗑️ Reset & Hapus Semua Arsip", key="custom_reset_btn"):
@@ -229,6 +229,7 @@ for msg in st.session_state.messages:
 if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
     st.html(f'<div class="chat-container-block align-user"><div class="user-name-tag">Tuan Gigs 👨‍💻</div><div class="iphone-user">{user_input}</div></div>')
     
+    # KUNCI SYSTEM INSTRUCTION DI MEMORI UTAMA (ANTI DIWIPE)
     if len(st.session_state.messages) == 0:
         system_instruction = (
             "You are oXy AI, created by -Oxy-. Rules for language: "
@@ -254,9 +255,10 @@ if user_input := st.chat_input("Tanyakan sesuatu, Tuan Gigs..."):
     st.html('</div></div>')
     
     try:
+        # FIX UTAMA: Kirim seluruh isi messages (termasuk "system prompt" rahasia) ke server OpenRouter
         response = client.chat.completions.create(
             model="openrouter/free",
-            messages=[m for m in st.session_state.messages if m["role"] != "system"]
+            messages=st.session_state.messages
         )
         full_response = response.choices[0].message.content
         
