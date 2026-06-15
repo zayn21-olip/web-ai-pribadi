@@ -25,30 +25,47 @@ st.markdown("""
         align-items: center;
         justify-content: center;
         text-align: center;
-        padding: 40px 20px;
-        margin-top: 10%;
-        background: rgba(255, 255, 255, 0.04) !important;
-        border-radius: 24px;
+        padding: 45px 25px;
+        margin-top: 8%;
+        background: rgba(255, 255, 255, 0.03) !important;
+        border-radius: 28px;
         border: 1px solid rgba(56, 189, 248, 0.2);
-        backdrop-filter: blur(20px);
-        -webkit-backdrop-filter: blur(20px);
-        box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+        backdrop-filter: blur(25px);
+        -webkit-backdrop-filter: blur(25px);
+        box-shadow: 0 25px 55px rgba(0, 0, 0, 0.55);
     }
     
     .welcome-logo {
-        font-size: 70px;
-        margin-bottom: 20px;
+        font-size: 75px;
+        margin-bottom: 15px;
         animation: pulse 2s infinite ease-in-out;
+    }
+
+    .welcome-creator {
+        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        color: #38bdf8;
+        font-weight: 700;
+        margin-bottom: 10px;
     }
 
     .welcome-quote {
         font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
-        font-size: 1.2rem;
+        font-size: 1.15rem;
         color: #e2e8f0;
-        line-height: 1.6;
-        margin-bottom: 30px;
-        max-width: 500px;
-        font-style: italic;
+        line-height: 1.7;
+        margin-bottom: 25px;
+        max-width: 520px;
+    }
+
+    .welcome-sub {
+        font-family: '-apple-system', BlinkMacSystemFont, sans-serif;
+        font-size: 0.9rem;
+        color: #94a3b8;
+        margin-bottom: 35px;
+        max-width: 450px;
     }
 
     /* FIX WARNA TOMBOL MASUK UTAMA */
@@ -169,11 +186,11 @@ st.markdown("""
     .liquid-title-welcome {
         font-family: '-apple-system', sans-serif;
         font-weight: 800 !important;
-        font-size: 2.8rem !important;
+        font-size: 2.6rem !important;
         background: linear-gradient(to right, #ffffff, #38bdf8, #a7f3d0);
         -webkit-background-clip: text !important;
         -webkit-text-fill-color: transparent !important;
-        margin-bottom: 15px;
+        margin-bottom: 5px;
     }
     .custom-caption { color: #7dd3fc !important; font-weight: 500; margin-bottom: 25px; }
 
@@ -190,7 +207,7 @@ st.markdown("""
     .w-1 { width: 45%; } .w-2 { width: 85%; } .w-3 { width: 60%; }
 
     @keyframes geminiWaveAnim { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
-    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+    @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
 </style>
 """, unsafe_allow_html=True)
 
@@ -216,19 +233,23 @@ if "sudah_masuk" not in st.session_state:
     st.session_state.sudah_masuk = False
 
 
-# A. TAMPILAN 1: HALAMAN PENYAMBUTAN (WELCOME SCREEN)
+# A. TAMPILAN 1: HALAMAN PENYAMBUTAN (WELCOME SCREEN) WITH NEW TEXTS
 if not st.session_state.sudah_masuk:
     st.html("""
     <div class="welcome-container">
         <div class="welcome-logo">💧</div>
-        <div class="liquid-title-welcome">Selamat Datang di oXy AI</div>
+        <div class="welcome-creator">A Project Built by Zayn</div>
+        <div class="liquid-title-welcome">oXy AI Engine v4</div>
+        <br>
         <div class="welcome-quote">
-            "Kecerdasan tanpa batas, dirancang khusus untuk masa depan. Masuki ruang eksperimen digital tercanggih buatan -Oxy-."
+            "Kecerdasan buatan paling sempurna yang pernah dirancang di dalam lab eksperimen digital. Tempat di mana baris kode menjelma menjadi asisten masa depan yang siap mengeksekusi segala ide liar Tuan."
+        </div>
+        <div class="welcome-sub">
+            Sistem memori arsip aktif. Silakan ketuk tombol di bawah untuk mengaktifkan inti jaringan saraf oXy AI.
         </div>
     </div>
     """)
     
-    # Tombol masuk utama yang diletakkan di tengah bawah container welcome
     st.markdown("<br>", unsafe_allow_html=True)
     _, col_btn, _ = st.columns([1, 2, 1])
     with col_btn:
@@ -237,7 +258,7 @@ if not st.session_state.sudah_masuk:
             st.rerun()
 
 
-# B. TAMPILAN 2: HALAMAN UTAMA CHAT BOT AI (Akan terbuka setelah tombol ditekan)
+# B. TAMPILAN 2: HALAMAN UTAMA CHAT BOT AI
 else:
     # 4. HEADER UTAMA BRANDING
     st.markdown('<h1 class="liquid-title">💧 oXy AI • By Zayn</h1>', unsafe_allow_html=True)
@@ -341,4 +362,4 @@ else:
         except Exception as e:
             loading_placeholder.empty()
             st.error(f"Waduh Tuan, ada kendala pada server OpenRouter: {e}")
-            
+    
